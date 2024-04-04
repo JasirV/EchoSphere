@@ -292,7 +292,18 @@ const newRequest=await FriendSchema.findByIdAndUpdate(
         message:'Friend Request' +status
     })
 }
+const profileVirew=async (req,res)=>{
+const {userId}=req.body.user;
+const {id}=req.body;
+const user =await UserSchema.findById(id)
+user.views.push(userId);
+await user.save()
+res.status(201).json({
+    status:'success',
+    message:'SuccessFully add The friend For View List'
+})
+}
 
 module.exports={
-    loginUser,register,profilesetion,getUser,updateUser,friendReuest,getRequeset,acceptRequest
+    loginUser,register,profilesetion,getUser,updateUser,friendReuest,getRequeset,acceptRequest,profileVirew
 }

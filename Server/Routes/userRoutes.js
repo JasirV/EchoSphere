@@ -18,7 +18,9 @@ userRouter.post('/register',userController.register)
 //accept/deny 
 .post('/acceptRequest',userController.acceptRequest)
 
+//view Profile 
 
+.post('profileView',userController.profileVirew)
 
 
 module.exports=userRouter
