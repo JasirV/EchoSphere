@@ -264,8 +264,35 @@ const getRequeset=async(req,res)=>{
         data:request
     })
 }
-const test=0
+const acceptRequest=async(req,res)=>{
+const id=req.body.user.userId
+const {rid,status}=req.body
+const requestEx=await FriendSchema.findById(rid);
+if(!requestEx){
+    return res.status(200).json({
+        status:'fail',
+        message:'No Request Found'
+    })
+}
+const newRequest=await FriendSchema.findByIdAndUpdate(
+    {_id:rid},
+    {requestStatus:status}
+    );
+
+    if(status === "Accepted"){
+        const user=await UserSchema.findById(id);
+        user.friends.push(newRequest?.requestFrom);
+        await user.save();
+        const friend=await UserSchema.findById(newRequest?.requestFrom);
+        friend.friends.push(newRequest?.requestTo);
+        await friend.save()
+    }
+    res.status(201).json({
+        status:'success',
+        message:'Friend Request' +status
+    })
+}
 
 module.exports={
-    loginUser,register,profilesetion,getUser,updateUser,friendReuest,getRequeset
+    loginUser,register,profilesetion,getUser,updateUser,friendReuest,getRequeset,acceptRequest
 }

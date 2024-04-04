@@ -15,6 +15,9 @@ userRouter.post('/register',userController.register)
 .post('/friendRequest',userController.friendReuest)
 .post('/getRequeset',userController.getRequeset)
 
+//accept/deny 
+.post('/acceptRequest',userController.acceptRequest)
+
 
 
 
