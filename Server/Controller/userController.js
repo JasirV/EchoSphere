@@ -1,6 +1,8 @@
 const UserSchema=require("../Models/Users")
 const passwordReset=require('../Models/resetPassword')
 const FriendSchema=require('../Models/Friends')
+const CommentSchema=require('../Models/Comment')
+const PostSchema=require('../Models/Post')
 const bcrypt =require('bcryptjs');
 const {sendVerificationEmail,resetPasswordLink} = require("../Utils/sendEmail");
 const { hashStrting, comparePassword, tokengenerator } = require("../Utils/jwt");
@@ -317,7 +319,204 @@ const suggestedFriends=async (req,res)=>{
         data:suggestFriends,
     })
 }
+const createPost=async(req,res)=>{
+    const {userId}=req.body.user;
+    const{description,image}=req.body
+    if(!description){
+        return res.status(400).json({
+            status:'fail',
+            message:'You Must Provide a Description'
+        })
+    }
+    const post=await PostSchema.create({
+        userId,
+        description,
+        image,
+    })
+    res.status(200).json({
+        status:'success',
+        message:'Post Created SuccessFully',
+        data:post
+    })
+}
 
+const getPost=async(req,res)=>{
+    const {userId}=req.body.user;
+    const {search}=req.body
+
+    const user=await UserSchema.findById(userId);
+    const friends=user?.friends?.toString().split(',')??[];
+    friends.push(userId)
+
+    const searchPostQuery={
+        $or:[
+            {description:{$regex:search,$options:'i'},},
+        ],
+    };
+
+    const posts =await PostSchema.find(search?searchPostQuery:{}).populate({
+        path:'userId',
+        select:'firstName lastName location profileUrl -password'
+    }).sort({_id:-1});
+    const friendsPosts=posts?.filter((post)=>{
+        return friends.includes(post?.userId?._id.toString())
+    });
+    const otherPosts=posts?.filter((post)=> !friends.includes(post?.userId?._id.toString()))
+
+    let postsRes=null
+    if(friendsPosts?.length >0){
+        postsRes=search ? friendsPosts :[...friendsPosts,...otherPosts]
+    }else{
+        postsRes=posts
+    }
+
+    res.status(200).json({
+        status:'success',
+        message:'successfully',
+        data:postsRes
+    })
+}
+
+const getUserPost=async(req,res)=>{
+    const {id}=req.params;
+    const post=await PostSchema.find({userId:id}).populate({path:'userId',select:'firstName lastName location profileUrl -password'}).sort({_id:-1})
+
+    res.status(200).json({
+        status:"suceess",
+        message:'suceesfully',
+        data:post
+    })
+}
+const getComments=async(req,res)=>{
+    const {postId} =req.params;
+
+    const postComments=await CommentSchema.find({postId})
+    .populate({path:'userId',
+select:"firstName lastName location profileUrl -password" 
+}).populate({path:'replies.userId',select:'firstName lastName locationi profileUrl -password'})
+.sort({_id:-1});
+
+res.status(200).json({
+    status:"success",
+    message:"successFully",
+    data:postComments
+})
+}
+
+const likePost=async (req,res)=>{
+    const {userId}=req.body.user;
+    const {id}=req.params;
+    const post =await PostSchema.findById(id);
+    const index=post.likes.findIndex((pi)=>pi===String(userId));
+
+    if(index===-1){
+        post.likes.push(userId);
+    }else{
+        post.likes=post.likes.filter((pi)=>pi!==String(userId))
+    }
+    const newPost=await PostSchema.findByIdAndUpdate(id,post,{new:true})
+
+    res.status(200).json({
+        status:'success',
+        message:"successFully",
+        data:newPost
+    })
+}
+
+const likeComment=async(req,res)=>{
+    const {userId}=req.body.user
+    const {id,rid}=req.params;
+
+    if(rid===undefined||rid === null ||rid ==="false"){
+        const Comment =await CommentSchema.findById(id)
+        const index =Comment.likes.findIndex((cl)=>cl===String(userId));
+        if(index === -1){
+            Comment.likes.push(userId)
+        }else{
+            Comment.likes =Comment.likes.filter((i)=>i!==String(userId))
+        }
+        const update=await CommentSchema.findByIdAndUpdate(id,Comment,{
+            new:true
+        });
+        res.status(201).json(update);
+    }else{
+        const replyComments=await CommentSchema.findOne(
+            {_id:id},
+            {
+                replies:{
+                    $elemMatch:{_id:rid}
+                }
+            }
+        )
+    };
+    const index =replyComments?.replies[0]?.likes.findIndex((i)=>i===String(userId))
+    if(index === -1 ){
+        replyComments.replies[0].likes.push(userId)
+    }else{
+        replyComments.replies[0].likes=replyComments.replies[0]?.likes.filter((i)=>i!== String(userId))
+    }
+    const query={_id:id,"replies._id":rid}
+    const updated={
+        $set:{
+            "replies.$.likes":replyComments.replies[0].likes,
+        }
+    }
+    const result=await CommentSchema.updateOne(query,updated,{new:true});
+   res.status(201).json(result); 
+}
+const commentPost =async (req,res)=>{
+    const {comment,from}=req.body;
+    const {userId}= req.body.user
+    const {id} =req.params;
+
+    if(comment === null){
+        res.status(404).json({
+            status:"fail",
+            message:'Comment is required'
+        })
+    }
+    const newComment= new CommentSchema({comment,from,userId,postId:id})
+    await newComment.save()
+
+    const post =await PostSchema.findById(id)
+    post.comment.push(newComment._id)
+
+    const updatePost=await PostSchema.findByIdAndUpdate(id,post,{new:true})
+    res.status(201).json(newComment)
+}
+
+const replayComments= async(req,res)=>{
+    const {userId}=req.body.user;
+    const {comment,replyAt,from}=req.body
+    const {id}=req.params;
+
+    if(comment === null ){
+        return res.status(400).json({
+            message:'Comment is Required'
+        })
+    }
+    const commentInfo=await CommentSchema.findById(id);
+    commentInfo.replies.push({
+        comment,
+        replyAt,
+        from,
+        userId,
+        created_At:Date.now()
+    })
+    commentInfo.save()
+    res.status(200).json(commentInfo)
+}
+
+const deletePost =async (req,res)=>{
+    const {id} =req.params;
+    await PostSchema.findByIdAndDelete(id)
+
+    res.status(200).json({
+        status:'succes',
+        message:'succesFully Deleted'
+    })
+}
 module.exports={
-    loginUser,register,profilesetion,getUser,updateUser,friendReuest,getRequeset,acceptRequest,profileViews,suggestedFriends
+    loginUser,register,profilesetion,getUser,updateUser,friendReuest,getRequeset,acceptRequest,profileViews,suggestedFriends,
+    createPost,getPost,getUserPost,getComments,likePost,likeComment,commentPost,replayComments,deletePost,
 }
