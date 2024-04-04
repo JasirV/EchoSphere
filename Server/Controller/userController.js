@@ -292,7 +292,7 @@ const newRequest=await FriendSchema.findByIdAndUpdate(
         message:'Friend Request' +status
     })
 }
-const profileVirew=async (req,res)=>{
+const profileViews=async (req,res)=>{
 const {userId}=req.body.user;
 const {id}=req.body;
 const user =await UserSchema.findById(id)
@@ -304,6 +304,20 @@ res.status(201).json({
 })
 }
 
+
+const suggestedFriends=async (req,res)=>{
+    const {userId}=req.body.user;
+    let queryObject={};
+    queryObject._id={$ne:userId};
+    queryObject.friends={$nin:userId};
+    let queryResult=UserSchema.find(queryObject).limit(15).select('firstName lastName profileUrl professioin -password')
+    const suggestFriends=await queryResult
+    res.status(200).json({
+        status:'success',
+        data:suggestFriends,
+    })
+}
+
 module.exports={
-    loginUser,register,profilesetion,getUser,updateUser,friendReuest,getRequeset,acceptRequest,profileVirew
+    loginUser,register,profilesetion,getUser,updateUser,friendReuest,getRequeset,acceptRequest,profileViews,suggestedFriends
 }

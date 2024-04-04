@@ -19,8 +19,11 @@ userRouter.post('/register',userController.register)
 .post('/acceptRequest',userController.acceptRequest)
 
 //view Profile 
+.post('/profileViews',userController.profileViews)
 
-.post('profileView',userController.profileVirew)
+ //suggestedFriends
+
+ .post ('/suggestFriends',userController.suggestedFriends)
 
 
 module.exports=userRouter
