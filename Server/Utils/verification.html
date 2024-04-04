@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Verification</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #007bff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        h1 {
+            color: #007bff;
+        }
+        p {
+            color: #333333;
+            margin-top: 20px;
+        }
+        button {
+            background-color: #007bff;
+            color: #ffffff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Email Verification</h1>
+        <p>Please verify your email address by clicking the button below:</p>
+        <button onclick="verifyEmail()">Verify Email</button>
+        <p id="verification-status"></p>
+    </div>
+
+    <script>
+        function verifyEmail() {
+            document.getElementById('verification-status').innerText = 'Email verified successfully!';
+            setTimeout(function() {
+                window.location.href = 'http://localhost:3000/login';
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
