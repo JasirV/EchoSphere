@@ -264,9 +264,7 @@ const getRequeset=async(req,res)=>{
         data:request
     })
 }
-const addnewfunctions=async (req,res)=>{
 
-}
 
 module.exports={
     loginUser,register,profilesetion,getUser,updateUser,friendReuest,getRequeset
