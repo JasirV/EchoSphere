@@ -264,7 +264,7 @@ const getRequeset=async(req,res)=>{
         data:request
     })
 }
-
+const test=0
 
 module.exports={
     loginUser,register,profilesetion,getUser,updateUser,friendReuest,getRequeset
