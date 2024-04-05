@@ -339,31 +339,36 @@ const suggestedFriends = async (req, res) => {
     });
 }
 const createPost=async(req,res)=>{
-    const {id} = req.body;
-    const{description,image}=req.body
-    console.log(req.body);
-    console.log(id," id " + description," description " +image," image ");
-    if(!description){
-        return res.status(400).json({
-            status:'fail',
-            message:'You Must Provide a Description'
-        })
-    }
-    const post=await PostSchema.create({
-        id,
-        description,
-        image,
-    })
-    res.status(200).json({
-        status:'success',
-        message:'Post Created SuccessFully',
-        data:post
-    })
-}
+    try {
+        const { userId } = req.body;
+        const { description, image } = req.body;
+    
+        if (!description) {
+          next("You must provide a description");
+          return;
+        }
+    
+        const post = await PostSchema.create({
+          userId,
+          description,
+          image,
+        });
+    
+        res.status(200).json({
+          sucess: true,
+          message: "Post created successfully",
+          data: post,
+        });
+      } catch (error) {
+        console.log(error);
+        res.status(404).json({ message: error.message });
+      }
+    };
+    
 
 const getPost=async(req,res)=>{
-    const {userId}=req.body.user;
-    const {search}=req.body
+    const {userId}=req.body;
+    const {search}=req.body 
 
     const user=await UserSchema.findById(userId);
     const friends=user?.friends?.toString().split(',')??[];

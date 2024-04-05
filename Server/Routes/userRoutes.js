@@ -19,7 +19,7 @@ userRouter.post('/register',userController.register)
 .post('/acceptRequest',userController.acceptRequest)
 
 //view Profile 
-.post('/profileViews',userController.profileViews)
+.post('/profileViews',userController.profileViews) 
 
  //suggestedFriends
 

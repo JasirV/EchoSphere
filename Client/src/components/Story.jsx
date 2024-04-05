@@ -22,7 +22,7 @@ const Story = ({ posts }) => {
         <FaChevronCircleLeft />
       </button>
       <div ref={scrollRef} className="flex overflow-x-auto scrollbar-hide space-x-4">
-        {posts.map((post, index) => (
+        {posts?.map((post, index) => (
           <div key={index} className="flex flex-col items-center">
             <div className="w-20 h-20 overflow-hidden rounded-full border-4 border-[#1877F2]">
               <img src={post?.userId?.profileUrl ?? NoProfile} alt="Profile" className="w-full h-full object-cover" />

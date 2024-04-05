@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch,useSelector } from 'react-redux'
 import TopBar from '../components/TopBar'
 import ProfileCard from '../components/ProfileCard'
 import FriendsCard from '../components/FriendsCard'
-import { posts, requests, user } from '../components/data'
+import {  requests, user } from '../components/data'
 import { Link } from 'react-router-dom'
 import NoProfile from '../assets/ProfilePng.png'
 import CustomeButton from '../components/CustomeButton'
@@ -17,10 +17,12 @@ import Story from '../components/Story'
 import TopBarProfilwe from '../components/TopBarProfilwe'
 import Profile from './Profile'
 import axios from 'axios'
+import { handleFileUpload } from '../utils'
 
 const Home = () => {
   //useSelector((state)=>state.user)
   const id=localStorage.getItem('user')
+  const token=localStorage.getItem('token')
   const [users, setusers] = useState(id)
   const [errMsg, setErrMsg] = useState('')
   const [friendRequest, setFriendRequest] = useState(requests)
@@ -29,65 +31,56 @@ const Home = () => {
   const [loading, setloading] = useState(false)
   const [description,setDescription]=useState('')
   const [suggestion,setSuggestion]=useState(requests)
-  const { register, formState: { errors } } = useForm()
-  const handlePosrSubmit = async (data) => { }
-  useEffect(() => {
-    const profilesection = async () => {
-      try {
-        const res = await axios.get(`http://localhost:3001/profilesection/${id}`);
-        setusers(res.data.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-  
-    const Suggestion = async () => {
-      const res = await axios.post(`http://localhost:3001/suggestFriends`, { id });
-      setSuggestion(res.data.data);
-    };
-  
-    const getrequst = async () => {
-      const res = await axios.get(`http://localhost:3001/getRequeset/${id}`);
-      setFriendRequest(res.data.data);
-    };
-    getrequst();
-    Suggestion();
-    profilesection();
-  }, []);
-
-  const handleImageChange = (img) => {
-    const selectedImage = img.target.files[0];
-    console.log(selectedImage ,"iinfsaf");
-    setFile(selectedImage);
-  };
-  const handleDescriptionChange = (e) => {
-    console.log(e,"descriptiion")
-    setDescription(e);
-  };
-  const handileAdd = async (e) => {
-    e.preventDefault();
-    const formData = new FormData();
-    console.log(description);
-    formData.append("file", file);
-    formData.append("description", description);
-    console.log(formData);
+  const [posts,setPosts]=useState([])
+  const { register,handleSubmit,reset, formState: { errors } } = useForm()
+  const dispatch=useDispatch()
+  const handlePostSubmit = async (data) => {
+    setPosting(true);
+    setErrMsg("");
+    console.log(data);
     try {
-      setPosting(true);
-      const response = await axios.post('http://localhost:3001/post/createPost',{id}, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-      console.log('Data uploaded successfully:', response.data);
-      setPosting(false);
-      setFile(null);
+      const uri=file &&(await handleFileUpload(file))
+      const newData=uri ?{...data,image:uri}:data;
+console.log(newData);
+      const response = await axios.post('http://localhost:3001/post/createPost',newData);
+      if(response?.status==='fail'){
+        setErrMsg(response);
+      }else{
+        reset({
+          description:''
+        });
+        setFile(null)
+        setErrMsg('')
+        await fetchPost()
+      }
+      setPosting(false)
     } catch (error) {
-      console.error('Error uploading data:', error);
-      setPosting(false);
+      console.log(error);
+      setPosting(false)
     }
-  };
+   }
+  const fetchPost=async()=>{
+    const res=await axios.post('http://localhost:3001/post',{token},{})
+    setPosts(res.data.data);
+    setloading(false)
+  }
+  console.log(posts);
+  const handleLikePost=async()=>{}
+  const handleDelete=async()=>{}
+  const fetchFriendRequests=async()=>{}
+  const fetchSuggestedFriends=async()=>{}
+  const handleFriendRequest=async()=>{}
+  const acceptFriendRequest=async()=>{}
+  const getUsers=async()=>{}
 
-  
+  useEffect(()=>{
+setloading(true)
+getUsers()
+fetchPost()
+fetchFriendRequests()
+fetchSuggestedFriends()
+  },[])
+
   return (
     <>
     <div className='home w-full px- lg:px-10 pb-20 2xl:px-40 bg-bgColor lg:rounded-lg h-screen overflow-hidden'>
@@ -101,9 +94,7 @@ const Home = () => {
         {/* CENTER */}
         <div className='flex-1 h-full  px-4 flex flex-col gap-6 overflow-y-auto rounded-lg'>
           <Story posts={posts} />
-          <form onSubmit={(e) => {
-    e.preventDefault();
-}} className='bg-primary px-4 rounded-lg'>
+          <form onSubmit={handleSubmit(handlePostSubmit)} className='bg-primary px-4 rounded-lg'>
             <div className='w-full flex item-center gap-2 py-4 border-b border-[#66666645]'>
               <img src={user?.profileUrl ?? NoProfile} alt='UserImage' className='w-14 h-14 rounded-full object-cover' />
               <TextInput
@@ -111,8 +102,7 @@ const Home = () => {
   placeholder='Whats on your mind...'
   name="description"
   register={register('description', { required: "Write something about the post." })}
-  error={errors.description ? errors.description.message : ""}
-  onChange={(e) => handleDescriptionChange(e.target.value)} // Add onChange event handler
+  error={errors.description ? errors.description.message : ""} 
 />
 
 
@@ -129,7 +119,6 @@ const Home = () => {
                 <input
                   type="file"
                   id="imageUpload"
-                  onChange={handleImageChange}
                   className='hidden'
                   data-max-size='5120'
                   accept='.jpg,.png,.jpeg'
@@ -142,7 +131,6 @@ const Home = () => {
                 <input
                   type="file"
                   id="videoUpload"
-                  onChange={handleImageChange}
                   className='hidden'
                   data-max-size='5120'
                   accept='.mp4,.wav'
@@ -151,11 +139,11 @@ const Home = () => {
               <label htmlFor="vgifUpload" className='flex items-center gap-1 text-base text-ascent-2 text-ascent-1 cursor-pointer'>
                 <BsFiletypeGif />
                 <span>Gif </span>
-                <input type="file" id="vgifUpload" onChange={handleImageChange} className='hidden' data-max-size='5120' accept='.gif' />
+                <input type="file" id="vgifUpload"  className='hidden' data-max-size='5120' accept='.gif' />
               </label>
               <div>{posting ? (
                 <Loading />
-              ) : (<CustomeButton type='submit' titile='post' containerStyle='bg-[#0444a4] text-white py-1 px-6 rounded-full font-semibold text-sm' onClick={handileAdd}/>)}</div>
+              ) : (<CustomeButton type='submit' titile='post' containerStyle='bg-[#0444a4] text-white py-1 px-6 rounded-full font-semibold text-sm' />)}</div>
             </div>
           </form>
           {loading ? (<Loading />) : posts?.length > 0 ? (
