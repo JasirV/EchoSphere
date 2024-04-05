@@ -27,6 +27,7 @@ const Home = () => {
   const [file, setFile] = useState(null);
   const [posting, setPosting] = useState(false)
   const [loading, setloading] = useState(false)
+  const [description,setDescription]=useState('')
   const [suggestion,setSuggestion]=useState(requests)
   const { register, formState: { errors } } = useForm()
   const handlePosrSubmit = async (data) => { }
@@ -54,18 +55,22 @@ const Home = () => {
     profilesection();
   }, []);
 
-  const handleFileChange = (e) => {
-    setFile(e.target.files[0]);
+  const handleImageChange = (img) => {
+    const selectedImage = img.target.files[0];
+    console.log(selectedImage ,"iinfsaf");
+    setFile(selectedImage);
   };
-  
-  const onSubmit = async (data) => {
-    
+  const handleDescriptionChange = (e) => {
+    console.log(e,"descriptiion")
+    setDescription(e);
+  };
+  const handileAdd = async (e) => {
+    e.preventDefault();
     const formData = new FormData();
-formData.append('description',data.description);
-if (file) {
-  formData.append('file', file);
-}
-console.log(formData,"ygwdhgw");
+    console.log(description);
+    formData.append("file", file);
+    formData.append("description", description);
+    console.log(formData);
     try {
       setPosting(true);
       const response = await axios.post('http://localhost:3001/post/createPost',{id}, formData, {
@@ -97,18 +102,19 @@ console.log(formData,"ygwdhgw");
         <div className='flex-1 h-full  px-4 flex flex-col gap-6 overflow-y-auto rounded-lg'>
           <Story posts={posts} />
           <form onSubmit={(e) => {
-    e.preventDefault(); // Prevent default form submission
-    onSubmit({ description: e.target.description.value }); // Pass description value to onSubmit
+    e.preventDefault();
 }} className='bg-primary px-4 rounded-lg'>
             <div className='w-full flex item-center gap-2 py-4 border-b border-[#66666645]'>
               <img src={user?.profileUrl ?? NoProfile} alt='UserImage' className='w-14 h-14 rounded-full object-cover' />
-               <TextInput
-            styles='w-full rounded-full py-5'
-            placeholder='Whats on your mind...'
-            name="description"
-            register={register('description', { required: "Write something about the post." })}
-            error={errors.description ? errors.description.message : ""}
-        />
+              <TextInput
+  styles='w-full rounded-full py-5'
+  placeholder='Whats on your mind...'
+  name="description"
+  register={register('description', { required: "Write something about the post." })}
+  error={errors.description ? errors.description.message : ""}
+  onChange={(e) => handleDescriptionChange(e.target.value)} // Add onChange event handler
+/>
+
 
             </div>
             {errMsg?.message && (
@@ -123,7 +129,7 @@ console.log(formData,"ygwdhgw");
                 <input
                   type="file"
                   id="imageUpload"
-                  onChange={(e) => setFile(e.target.files[0])}
+                  onChange={handleImageChange}
                   className='hidden'
                   data-max-size='5120'
                   accept='.jpg,.png,.jpeg'
@@ -136,7 +142,7 @@ console.log(formData,"ygwdhgw");
                 <input
                   type="file"
                   id="videoUpload"
-                  onChange={(e) => setFile(e.target.files[0])}
+                  onChange={handleImageChange}
                   className='hidden'
                   data-max-size='5120'
                   accept='.mp4,.wav'
@@ -145,11 +151,11 @@ console.log(formData,"ygwdhgw");
               <label htmlFor="vgifUpload" className='flex items-center gap-1 text-base text-ascent-2 text-ascent-1 cursor-pointer'>
                 <BsFiletypeGif />
                 <span>Gif </span>
-                <input type="file" id="vgifUpload" onChange={(e) => setFile(e.target.files[0])} className='hidden' data-max-size='5120' accept='.gif' />
+                <input type="file" id="vgifUpload" onChange={handleImageChange} className='hidden' data-max-size='5120' accept='.gif' />
               </label>
               <div>{posting ? (
                 <Loading />
-              ) : (<CustomeButton type='submit' titile='post' containerStyle='bg-[#0444a4] text-white py-1 px-6 rounded-full font-semibold text-sm' />)}</div>
+              ) : (<CustomeButton type='submit' titile='post' containerStyle='bg-[#0444a4] text-white py-1 px-6 rounded-full font-semibold text-sm' onClick={handileAdd}/>)}</div>
             </div>
           </form>
           {loading ? (<Loading />) : posts?.length > 0 ? (

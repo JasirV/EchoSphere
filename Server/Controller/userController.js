@@ -339,9 +339,10 @@ const suggestedFriends = async (req, res) => {
     });
 }
 const createPost=async(req,res)=>{
-    const id = req.body.id;
+    const {id} = req.body;
     const{description,image}=req.body
-    console.log(id,"id" + description,"description" +image,"image");
+    console.log(req.body);
+    console.log(id," id " + description," description " +image," image ");
     if(!description){
         return res.status(400).json({
             status:'fail',
@@ -349,7 +350,7 @@ const createPost=async(req,res)=>{
         })
     }
     const post=await PostSchema.create({
-        userId,
+        id,
         description,
         image,
     })
