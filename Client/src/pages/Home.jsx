@@ -21,29 +21,68 @@ import axios from 'axios'
 const Home = () => {
   //useSelector((state)=>state.user)
   const id=localStorage.getItem('user')
-  console.log(id);
   const [users, setusers] = useState(id)
   const [errMsg, setErrMsg] = useState('')
   const [friendRequest, setFriendRequest] = useState(requests)
-  const [file, setFile] = useState('')
+  const [file, setFile] = useState(null);
   const [posting, setPosting] = useState(false)
   const [loading, setloading] = useState(false)
-  const { register, handleSubmit, formState: { errors } } = useForm()
+  const [suggestion,setSuggestion]=useState(requests)
+  const { register, formState: { errors } } = useForm()
   const handlePosrSubmit = async (data) => { }
   useEffect(() => {
-    const fetchData = async () => {
+    const profilesection = async () => {
       try {
-                 
         const res = await axios.get(`http://localhost:3001/profilesection/${id}`);
-        setusers(res.data.data)
+        setusers(res.data.data);
       } catch (error) {
         console.log(error);
       }
     };
-    fetchData();
-  }, []);
   
+    const Suggestion = async () => {
+      const res = await axios.post(`http://localhost:3001/suggestFriends`, { id });
+      setSuggestion(res.data.data);
+    };
+  
+    const getrequst = async () => {
+      const res = await axios.get(`http://localhost:3001/getRequeset/${id}`);
+      setFriendRequest(res.data.data);
+    };
+    getrequst();
+    Suggestion();
+    profilesection();
+  }, []);
 
+  const handleFileChange = (e) => {
+    setFile(e.target.files[0]);
+  };
+  
+  const onSubmit = async (data) => {
+    
+    const formData = new FormData();
+formData.append('description',data.description);
+if (file) {
+  formData.append('file', file);
+}
+console.log(formData,"ygwdhgw");
+    try {
+      setPosting(true);
+      const response = await axios.post('http://localhost:3001/post/createPost',{id}, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      console.log('Data uploaded successfully:', response.data);
+      setPosting(false);
+      setFile(null);
+    } catch (error) {
+      console.error('Error uploading data:', error);
+      setPosting(false);
+    }
+  };
+
+  
   return (
     <>
     <div className='home w-full px- lg:px-10 pb-20 2xl:px-40 bg-bgColor lg:rounded-lg h-screen overflow-hidden'>
@@ -57,10 +96,20 @@ const Home = () => {
         {/* CENTER */}
         <div className='flex-1 h-full  px-4 flex flex-col gap-6 overflow-y-auto rounded-lg'>
           <Story posts={posts} />
-          <form onSubmit={handleSubmit(handlePosrSubmit)} className='bg-primary px-4 rounded-lg'>
+          <form onSubmit={(e) => {
+    e.preventDefault(); // Prevent default form submission
+    onSubmit({ description: e.target.description.value }); // Pass description value to onSubmit
+}} className='bg-primary px-4 rounded-lg'>
             <div className='w-full flex item-center gap-2 py-4 border-b border-[#66666645]'>
               <img src={user?.profileUrl ?? NoProfile} alt='UserImage' className='w-14 h-14 rounded-full object-cover' />
-              <TextInput styles='w-full rounded-full py-5' placeholder='whats on your mind...' name="description" register={register('descriptioin', { require: "write something about post", })} error={errors.description ? errors.description.message : ""} />
+               <TextInput
+            styles='w-full rounded-full py-5'
+            placeholder='Whats on your mind...'
+            name="description"
+            register={register('description', { required: "Write something about the post." })}
+            error={errors.description ? errors.description.message : ""}
+        />
+
             </div>
             {errMsg?.message && (
               <span role='alert' className={`text-sm ${errMsg?.status === 'fail' ? "text-[#f64949fe]" : "text-[#2ba150fe]"}mt-0.5`}>
@@ -101,7 +150,6 @@ const Home = () => {
               <div>{posting ? (
                 <Loading />
               ) : (<CustomeButton type='submit' titile='post' containerStyle='bg-[#0444a4] text-white py-1 px-6 rounded-full font-semibold text-sm' />)}</div>
-
             </div>
           </form>
           {loading ? (<Loading />) : posts?.length > 0 ? (
@@ -153,16 +201,16 @@ const Home = () => {
               <span>Friend Suggestion</span>
             </div>
             <div className='w-full flex flex-col gap-4 pt-4'>
-              {friendRequest.map((i) => (
+              {suggestion.map((i) => (
                 <div className=' flex items-center justify-between' key={i._id}>
                   <Link to={`/profile/${i._id}`} key={i._id} className='w-full flex gap-4 items-center cursor-pointer'>
-                    <img src={i?.requestFrom?.profileUrl ?? NoProfile} alt={i.requestFrom?.firstName} className='w-10 h-10 object-cover rounded-full' />
+                    <img src={i?.profileUrl ?? NoProfile} alt={i.firstName} className='w-10 h-10 object-cover rounded-full' />
                     <div className='flex-1'>
                       <p className='text-base font-medium text-ascent-1'>
-                        {i?.requestFrom?.firstName}{i?.requestFrom?.lastName}
+                        {i?.firstName}{i?.lastName}
                       </p>
                       <span className='text-sm text-ascent-2'>
-                        {i.requestFrom?.profession ?? "No Profession"}
+                        {i?.profession ?? "No Profession"}
                       </span>
                     </div>
                   </Link>

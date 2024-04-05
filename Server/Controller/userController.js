@@ -222,7 +222,8 @@ const updateUser=async(req,res)=>{
 
 const friendReuest=async (req,res)=>{
 const {userId}=req.body.user
-const {requestTo}=req.body;
+console.log(req.body)
+const {requestTo}=req.body; 
 const requestEx=await FriendSchema.findOne({
     requestForm:userId,
     requestTo
@@ -254,18 +255,31 @@ return res.status(201).json({
 })
 }
 
-const getRequeset=async(req,res)=>{
+const getRequeset = async (req, res) => {
+    try {
+        const id  = req.params.id;
+        console.log(id); 
+        
+        const requests = await FriendSchema.find({
+            requestTo: id,
+            requestStatus: 'Pending'
+        })
+        .populate({
+            path: 'requestForm',
+            select: 'firstName lastName profileUrl profession'
+        })
+        .limit(10)
+        .sort({ _id: -1 });
 
-    const {userId}=req.body.user
-    const request=await FriendSchema.find({
-        requestTo:userId,
-        requestStatus:'Pending'
-    }).populate({path:'requestForm',select:'fristName lastName profileUrl profession -password'}).limit(10).sort({_id:-1})
-    res.status(200).json({
-        status:'success',
-        data:request
-    })
-}
+        res.status(200).json({
+            status: 'success',
+            data: requests
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ status: 'error', message: 'Internal server error' });
+    }
+};
 const acceptRequest=async(req,res)=>{
 const id=req.body.user.userId
 const {rid,status}=req.body
@@ -307,21 +321,27 @@ res.status(201).json({
 }
 
 
-const suggestedFriends=async (req,res)=>{
-    const {userId}=req.body.user;
-    let queryObject={};
-    queryObject._id={$ne:userId};
-    queryObject.friends={$nin:userId};
-    let queryResult=UserSchema.find(queryObject).limit(15).select('firstName lastName profileUrl professioin -password')
-    const suggestFriends=await queryResult
+const suggestedFriends = async (req, res) => {
+    const { id } = req.body;
+    let queryObject = {};
+    queryObject._id = { $ne: id };
+    queryObject.friends = { $nin: id };
+    
+    let queryResult = UserSchema.find(queryObject)
+                                   .limit(15)
+                                   .select('firstName lastName profileUrl profession');
+    
+    const suggestFriends = await queryResult;
+    
     res.status(200).json({
-        status:'success',
-        data:suggestFriends,
-    })
+        status: 'success',
+        data: suggestFriends,
+    });
 }
 const createPost=async(req,res)=>{
-    const {userId}=req.body.user;
+    const id = req.body.id;
     const{description,image}=req.body
+    console.log(id,"id" + description,"description" +image,"image");
     if(!description){
         return res.status(400).json({
             status:'fail',
@@ -516,6 +536,9 @@ const deletePost =async (req,res)=>{
         message:'succesFully Deleted'
     })
 }
+
+
+
 module.exports={
     loginUser,register,profilesetion,getUser,updateUser,friendReuest,getRequeset,acceptRequest,profileViews,suggestedFriends,
     createPost,getPost,getUserPost,getComments,likePost,likeComment,commentPost,replayComments,deletePost,

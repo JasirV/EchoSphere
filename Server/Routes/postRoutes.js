@@ -18,7 +18,7 @@ postRouter.post('/createPost',userController.createPost)
 .post('/comment/:id',userController.commentPost)
 .post('/replayComment/:id',userController.replayComments)
 
-//delete
+//delete 
 
 .delete('/:id',userController.deletePost)
 module.exports=postRouter
