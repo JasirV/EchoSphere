@@ -23,6 +23,7 @@ const Home = () => {
   //useSelector((state)=>state.user)
   const id=localStorage.getItem('user')
   const token=localStorage.getItem('token')
+  const user=localStorage.getItem('user')
   const [users, setusers] = useState(id)
   const [errMsg, setErrMsg] = useState('')
   const [friendRequest, setFriendRequest] = useState(requests)
@@ -64,15 +65,38 @@ console.log(newData);
     setPosts(res.data.data);
     setloading(false)
   }
-  console.log(posts);
-  const handleLikePost=async()=>{}
-  const handleDelete=async()=>{}
+  const handleLikePost=async(uri)=>{
+    const userId=id
+    try {
+      const res=await axios.post(`http://localhost:3001${uri}`,{userId})
+      console.log(res);
+      fetchPost()
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  const handleDelete=async()=>{
+    
+    try {
+      const res=await axios.delete(`http://localhost:3001/post/`,{token})
+      console.log(res)
+    } catch (error) {
+      console.log(error);
+    }
+  }
   const fetchFriendRequests=async()=>{}
   const fetchSuggestedFriends=async()=>{}
   const handleFriendRequest=async()=>{}
   const acceptFriendRequest=async()=>{}
+  const sendFriendRequest=async()=>{
+    try {
+      const res=await axios.post('http://localhost:3001/friendRequest',{id})
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+    }
+  }
   const getUsers=async()=>{}
-
   useEffect(()=>{
 setloading(true)
 getUsers()
@@ -150,8 +174,8 @@ fetchSuggestedFriends()
             posts?.map((post) => (
               <PostCard key={post?._id} post={post}
                 user={user}
-                deletePost={() => { }}
-                likePost={() => { }} />
+                deletePost={handleDelete}
+                likePost={handleLikePost} />
             ))
           ) : (
             <div className='flex w-full item-center justify-center'>

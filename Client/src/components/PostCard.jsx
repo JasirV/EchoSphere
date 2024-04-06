@@ -8,7 +8,7 @@ import {useForm} from 'react-hook-form'
 import TextInput from './TextInput';
 import CustomeButton from './CustomeButton'
 import Loading from './Loading'
-import { postComments } from './data';
+import { postComments, posts } from './data';
 const CommentForm=({user,id,replayAt,getComments})=>{
   const [loading,setLoading]=useState(false)
   const [errMsg,setErrMsg]=useState("")
@@ -86,13 +86,15 @@ const PostCard = ({post,user,deletePost,likePost}) => {
     const [loading,setLoading]=useState(false);
     const [replayComments,setReplayComments]=useState(0);
     const [showComments,setShowComments]=useState(0)
-
 const getComments = async () => {
   setReplayComments(0)
   setComments(postComments)
   setLoading(false)
 }
-const handleLike =async()=>{}
+const handleLike =async(uri)=>{
+  await likePost(uri)
+  await getComments(post?._id)
+}
   return (
     <div className='mb-2 bg-primary p-4 rounded-xl'>
         <div className='flex gap-3 items-center mb-2'>
@@ -121,8 +123,9 @@ const handleLike =async()=>{}
           )}
         </div>
         <div className='mt-4 flex justify-between item-center px-3 py-2 text-ascent-2 text-base border-t border-[#66666645]'>
-          <p className='flex gap-2 item-center text-base cursor-pointer'>
-            {post?.like?.includes(user?._id)?(
+          <p className='flex gap-2 item-center text-base cursor-pointer'
+          onClick={()=>handleLike('/post/like/'+post._id)}>
+            {post?.likes?.includes(user)?(
               <BiSolidLike size={20} color='blue' />
             ):(
               <BiLike size={20} />

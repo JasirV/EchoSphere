@@ -382,7 +382,7 @@ const getPost=async(req,res)=>{
 
     const posts =await PostSchema.find(search?searchPostQuery:{}).populate({
         path:'userId',
-        select:'firstName lastName location profileUrl -password'
+        select:'firstName lastName location profileUrl'
     }).sort({_id:-1});
     const friendsPosts=posts?.filter((post)=>{
         return friends.includes(post?.userId?._id.toString())
@@ -429,25 +429,52 @@ res.status(200).json({
 })
 }
 
-const likePost=async (req,res)=>{
-    const {userId}=req.body.user;
-    const {id}=req.params;
-    const post =await PostSchema.findById(id);
-    const index=post.likes.findIndex((pi)=>pi===String(userId));
-
-    if(index===-1){
+const likePost = async (req, res) => {
+    const { userId } = req.body;
+    const { id } = req.params;
+    try {
+      const post = await PostSchema.findById(id);
+  
+      if (!post) {
+        return res.status(404).json({
+          status: 'error',
+          message: 'Post not found',
+        });
+      }
+      if (post.likes.includes(userId)) {
+        return res.status(400).json({
+          status: 'error',
+          message: 'User has already liked this post',
+        });
+      }
+  
+      const index = post.likes.findIndex((pi) => String(pi) === String(userId));
+  
+      if (index === -1) {
         post.likes.push(userId);
-    }else{
-        post.likes=post.likes.filter((pi)=>pi!==String(userId))
+      } else {
+        post.likes = post.likes.filter((pi) => String(pi) !== String(userId));
+      }
+      const updatedPost = await PostSchema.findByIdAndUpdate(
+        id,
+        { likes: post.likes },
+        { new: true }
+      );
+  
+      res.status(200).json({
+        status: 'success',
+        message: 'Post liked/unliked successfully',
+        data: updatedPost,
+      });
+    } catch (error) {
+      console.log('Error in likePost:', error);
+      res.status(500).json({
+        status: 'error',
+        message: 'Internal server error',
+      });
     }
-    const newPost=await PostSchema.findByIdAndUpdate(id,post,{new:true})
-
-    res.status(200).json({
-        status:'success',
-        message:"successFully",
-        data:newPost
-    })
-}
+  };
+  
 
 const likeComment=async(req,res)=>{
     const {userId}=req.body.user

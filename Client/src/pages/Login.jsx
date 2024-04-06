@@ -26,6 +26,7 @@ const Login = () => {
       const res= await axios.post('http://localhost:3001/login',data)
       localStorage.setItem("token",res.data.token)
       localStorage.setItem("user",res.data.data._id)
+      
       if(res.status===404){
         setErrMsg(res)
       }else{
