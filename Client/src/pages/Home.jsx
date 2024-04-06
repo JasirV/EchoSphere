@@ -69,17 +69,16 @@ console.log(newData);
     const userId=id
     try {
       const res=await axios.post(`http://localhost:3001${uri}`,{userId})
-      console.log(res);
       fetchPost()
     } catch (error) {
       console.log(error);
     }
   }
-  const handleDelete=async()=>{
+  const handleDelete=async(va)=>{
     
     try {
-      const res=await axios.delete(`http://localhost:3001/post/`,{token})
-      console.log(res)
+      const res=await axios.delete(`http://localhost:3001/post/${va}`,{id})
+      fetchPost()
     } catch (error) {
       console.log(error);
     }
