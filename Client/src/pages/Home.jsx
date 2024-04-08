@@ -26,12 +26,12 @@ const Home = () => {
   const user=localStorage.getItem('user')
   const [users, setusers] = useState(id)
   const [errMsg, setErrMsg] = useState('')
-  const [friendRequest, setFriendRequest] = useState(requests)
+  const [friendRequest, setFriendRequest] = useState()
   const [file, setFile] = useState(null);
   const [posting, setPosting] = useState(false)
   const [loading, setloading] = useState(false)
   const [description,setDescription]=useState('')
-  const [suggestion,setSuggestion]=useState(requests)
+  const [suggestion,setSuggestion]=useState()
   const [posts,setPosts]=useState([])
   const { register,handleSubmit,reset, formState: { errors } } = useForm()
   const dispatch=useDispatch()
@@ -83,14 +83,48 @@ console.log(newData);
       console.log(error);
     }
   }
-  const fetchFriendRequests=async()=>{}
-  const fetchSuggestedFriends=async()=>{}
-  const handleFriendRequest=async()=>{}
-  const acceptFriendRequest=async()=>{}
-  const sendFriendRequest=async()=>{
+  const fetchFriendRequests=async()=>{
     try {
-      const res=await axios.post('http://localhost:3001/friendRequest',{id})
-      console.log(res);
+      const userId=id
+      const res=await axios.post(`http://localhost:3001/getRequeset/`,{userId})
+      setFriendRequest(res.data.data);
+    } catch (error) {
+      console.log(error);
+      
+    }
+  }
+  const fetchSuggestedFriends=async()=>{
+    try {
+      const res=await axios.post(`http://localhost:3001/suggestFriends`,{id})
+      setSuggestion(res.data.data)
+      fetchFriendRequests()
+    } catch (error) {
+      
+    }
+  }
+  const handleFriendRequest=async(val,requestTo)=>{
+    console.log(val ,'its id for requseter');
+    try {
+      const res=await sendFriendRequest(val,requestTo)
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  const acceptFriendRequest=async(id,status)=>{
+    const data={
+      rid:id,status
+    }
+    try {
+      const res=await axios.post('http://localhost:3001/acceptRequest',data)
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  const sendFriendRequest=async(val,requestTo)=>{
+    const data={val,requestTo}
+    try {
+      const res=await axios.post('http://localhost:3001/friendRequest',{data})
+      await fetchSuggestedFriends()
     } catch (error) {
       console.log(error);
     }
@@ -111,7 +145,7 @@ fetchSuggestedFriends()
       <div className='w-full flex gap-2 lg:gap-4 pt-5 pb-10 h-full'>
         {/* LIFT */}
         <div className='hidden w-1/3 lg:w-1/4 h-full md:flex flex-col gap-6 overflow-y-auto'>
-          <ProfileCard user={users} />
+          <ProfileCard />
           <FriendsCard friends={users?.friends} />
         </div>
         {/* CENTER */}
@@ -205,8 +239,14 @@ fetchSuggestedFriends()
                     </div>
                   </Link>
                   <div className='h-6 flex gap-1'>
-                    <CustomeButton titile='Accept' containerStyle="bg-[#0444a4] text-xs text-white px-1.5 py-1 rounded-full" />
-                    <CustomeButton titile='Deny ' containerStyle="border border -[#66] text-xs text-ascent-1 px-1.5 py-1 rounded-full" />
+                    <CustomeButton 
+                    titile='Accept'
+                    onClick={()=>acceptFriendRequest(i?._id,"Accepted")}
+                    containerStyle="bg-[#0444a4] text-xs text-white px-1.5 py-1 rounded-full" />
+                    <CustomeButton 
+                    titile='Deny ' 
+                    onClick={()=>acceptFriendRequest(i?._id,"Denied")}  
+                    containerStyle="border border -[#66] text-xs text-ascent-1 px-1.5 py-1 rounded-full" />
                   </div>
                 </div>
               ))}
@@ -218,7 +258,7 @@ fetchSuggestedFriends()
               <span>Friend Suggestion</span>
             </div>
             <div className='w-full flex flex-col gap-4 pt-4'>
-              {suggestion.map((i) => (
+              {suggestion?.map((i) => (
                 <div className=' flex items-center justify-between' key={i._id}>
                   <Link to={`/profile/${i._id}`} key={i._id} className='w-full flex gap-4 items-center cursor-pointer'>
                     <img src={i?.profileUrl ?? NoProfile} alt={i.firstName} className='w-10 h-10 object-cover rounded-full' />
@@ -232,7 +272,7 @@ fetchSuggestedFriends()
                     </div>
                   </Link>
                   <div className='flex gap-1'>
-                    <button className='bg-[#0444a430] text-sm text-white p-1 rounded' onClick={() => { }}>
+                    <button className='bg-[#0444a430] text-sm text-white p-1 rounded' onClick={() => {handleFriendRequest(id,i?._id)}}>
                       <BsPersonFillAdd size={20} className='text-[#0f52b6]' />
                     </button>
                   </div>

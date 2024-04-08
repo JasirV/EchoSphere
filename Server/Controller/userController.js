@@ -221,11 +221,11 @@ const updateUser=async(req,res)=>{
 
 
 const friendReuest=async (req,res)=>{
-const {userId}=req.body.user
-console.log(req.body)
-const {requestTo}=req.body; 
+try {
+    const {val}=req.body.data;
+const {requestTo}=req.body.data; 
 const requestEx=await FriendSchema.findOne({
-    requestForm:userId,
+    requestForm:val,
     requestTo
 })
 if(requestEx){
@@ -237,7 +237,7 @@ if(requestEx){
 }
 const accountEx=await FriendSchema.findOne({
     requestFrom:requestTo,
-    requestTo:userId
+    requestTo:val
 })
 if(accountEx){
 return res.status(400).json({
@@ -247,42 +247,49 @@ return res.status(400).json({
 }
 const nreReq=await FriendSchema.create({
     requestTo,
-    requestFrom:userId
+    requestFrom:val
 })
 return res.status(201).json({
         status:'success',
         message:'Friend Request sent SuccessFully'
 })
+
+} catch (error) {
+    console.log(error);
+} 
 }
 
 const getRequeset = async (req, res) => {
     try {
-        const id  = req.params.id;
-        console.log(id); 
-        
-        const requests = await FriendSchema.find({
-            requestTo: id,
-            requestStatus: 'Pending'
+        const { userId } = req.body;
+        const request = await FriendSchema.find({
+            requestTo: userId,
+            requestStatus: "Pending",
         })
         .populate({
-            path: 'requestForm',
-            select: 'firstName lastName profileUrl profession'
+            path: "requestFrom",
+            select: "firstName lastName profileUrl profession",
         })
         .limit(10)
-        .sort({ _id: -1 });
-
+        .sort({ _id: -1 });        
         res.status(200).json({
-            status: 'success',
-            data: requests
+          success: true,
+          data: request,
         });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ status: 'error', message: 'Internal server error' });
-    }
+      } catch (error) {
+        console.log(error);
+        res.status(500).json({
+          message: "auth error",
+          success: false,
+          error: error.message,
+        });
+      }
 };
+
 const acceptRequest=async(req,res)=>{
-const id=req.body.user.userId
+const id=req.body.data
 const {rid,status}=req.body
+console.log(id," id  " ,rid ," rid " ,status ," status");
 const requestEx=await FriendSchema.findById(rid);
 if(!requestEx){
     return res.status(200).json({
@@ -323,20 +330,34 @@ res.status(201).json({
 
 const suggestedFriends = async (req, res) => {
     const { id } = req.body;
-    let queryObject = {};
-    queryObject._id = { $ne: id };
-    queryObject.friends = { $nin: id };
+
+    try {
+        const friendRequests = await FriendSchema.find({
+            $or: [
+                { requestTo: id, requestStatus: 'Pending' },
+                { requestFrom: id, requestStatus: 'Pending' }
+            ]
+        });
     
-    let queryResult = UserSchema.find(queryObject)
-                                   .limit(15)
-                                   .select('firstName lastName profileUrl profession');
+        const friendRequestUserIds = friendRequests.map(request => request.requestTo.toString() === id ? request.requestFrom : request.requestTo);
     
-    const suggestFriends = await queryResult;
+        const queryObject = {
+            _id: { $ne: id },
+            _id: { $nin: friendRequestUserIds }
+        };
     
-    res.status(200).json({
-        status: 'success',
-        data: suggestFriends,
-    });
+        const suggestFriends = await UserSchema.find(queryObject)
+            .limit(15)
+            .select('firstName lastName profileUrl profession');
+    
+        res.status(200).json({
+            status: 'success',
+            data: suggestFriends,
+        });
+    } catch (error) {
+        console.error('Error finding suggested friends:', error);
+        res.status(500).json({ status: 'error', message: 'Internal server error' });
+    }
 }
 const createPost=async(req,res)=>{
     try {

@@ -2,13 +2,13 @@ const mongoose=require('mongoose')
 const Schema=mongoose.Schema;
 
 const CommentSchema=new Schema({
-    userId:{type:Schema.Types.ObjectId,ref:'user'},
-    postId:{type:Schema.Types.ObjectId,ref:'posts'},
+    userId:{type:Schema.Types.ObjectId,ref:'User'},
+    postId:{type:Schema.Types.ObjectId,ref:'Posts'},
     comment:{type:String,required:true},
     from:{type:String,required:true},
     repies:[{
         rid:{type:Schema.Types.ObjectId},
-        userId:{type:Schema.Types.ObjectId,ref:'user'},
+        userId:{type:Schema.Types.ObjectId,ref:'User'},
         from:{type:String},
         replyAt:{type:String},
         comment:{type:String},
@@ -21,4 +21,4 @@ const CommentSchema=new Schema({
 {timestamps:true}
 )
 
-module.exports=mongoose.model("comment",CommentSchema)
+module.exports=mongoose.model("oCmment",CommentSchema)

@@ -7,12 +7,12 @@ const Reaction=require('./Reactions')
 
 const PostSchema=new Schema(
     {
-        userId:{type:Schema.Types.ObjectId,ref:'user'},
+        userId:{type:Schema.Types.ObjectId,ref:'User'},
         description:{type:String,required:true},
         image:{type:String},
         likes:[{type:String}],
-        comment:[{type:Schema.Types.ObjectId,ref:'comment'}]
+        comment:[{type:Schema.Types.ObjectId,ref:'Comment'}]
     },
     {timestamps:true}
 );
-module.exports=mongoose.model("post",PostSchema)
+module.exports=mongoose.model("Post",PostSchema)

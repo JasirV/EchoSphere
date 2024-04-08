@@ -102,4 +102,4 @@ UserSchema.pre('save',(next)=>{
 
   
 
-module.exports=monsgoose.model('user',UserSchema)
+module.exports=monsgoose.model('User',UserSchema)

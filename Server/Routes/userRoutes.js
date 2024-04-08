@@ -13,7 +13,7 @@ userRouter.post('/register',userController.register)
 //friend request
 
 .post('/friendRequest',userController.friendReuest)
-.get('/getRequeset/:id',userController.getRequeset)
+.post('/getRequeset/',userController.getRequeset)
 
 //accept/deny 
 .post('/acceptRequest',userController.acceptRequest)

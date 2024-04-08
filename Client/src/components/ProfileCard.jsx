@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { user } from './data'
 import { UseDispatch,useDispatch,useSelector } from 'react-redux';
 import {LiaEditSolid} from "react-icons/lia"
+import {MdEdit } from "react-icons/md"
 import {
     BsBriefcase,
     BsFaceBook,
@@ -17,15 +18,15 @@ import NoProfile from '../assets/ProfilePng.png'
 import { updateProfile } from '../ReduX/userSlice';
 import axios from 'axios';
 
-const  ProfileCard = ({user}) => {
+const  ProfileCard = () => {
     const {user:data,edit}=useSelector((state)=>state.user)
-    const [users,setusers]=useState()
-    const userId=localStorage.getItem('userId')
+    const [user,setuser]=useState()
+    const userId=localStorage.getItem('user')
     useEffect(() => {
       const fetchData = async () => {
         try {
-          const response = await axios.get(`http://localhost:3001/profilesection`,userId);
-          console.log(response.data); 
+          const response = await axios.get(`http://localhost:3001/profilesection/${userId}`);
+          setuser(response.data.data) 
         } catch (error) {
           console.error('Error fetching data:', error);
         }
@@ -37,12 +38,12 @@ const  ProfileCard = ({user}) => {
   return (
     <div>
         <div className='w-full bg-primary flex flex-col item-center shadow-sm rounded-xl px-6 py-4'>
-            <div className='w-full flex items-center jsutify-between border-b pb-5 border-[#66666645]'>
+            <div className='w-full flex items-center jsutify-between border-b pb-5  border-[#66666645]'>
                 <Link to={'/profile/'} className='flex gap-2'>
-                    <img src={user?.profileUrl??NoProfile} alt={user?.email} className='w-14 h14 object-cover rounded-full' />
+                    <img src={user?.profileUrl??NoProfile} alt={user?.email} className='w-14 h-14 object-cover rounded-full' />
                     <div className='flex flex-col justify-center'>
                         <p className='text-lg font-medium text-asxent-1' >{user?.firstName} {user?.lastName}</p>
-                        <span className='text-asxent-2'>{user?.details?.job ?? "NO Profession"}</span>
+                        <span className='text-asxent-1'>{user?.profession ?? "NO Profession"}</span>
                     </div>
                 </Link>
                 <div className='ml-10'>
@@ -57,7 +58,7 @@ const  ProfileCard = ({user}) => {
                 className='bg-[#0444a430] text-sm text-white p-1 rounded'
                 onClick={() => {}}
               >
-                <BsPersonFillAdd size={20} className='text-[#0f52b6]' />
+                <MdEdit  size={20} className='text-[#0f52b6]' />
               </button>
             )}
           </div>

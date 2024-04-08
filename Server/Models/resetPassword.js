@@ -9,4 +9,4 @@ const passwordRestSchema=Schema({
     expiresAt:Date,
 })
 
-module.exports=mongoose.model("passwordReset",passwordRestSchema)
+module.exports=mongoose.model("PasswordReset",passwordRestSchema)
