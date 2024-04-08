@@ -110,12 +110,14 @@ console.log(newData);
       console.log(error);
     }
   }
-  const acceptFriendRequest=async(id,status)=>{
+  const acceptFriendRequest=async(userid,status)=>{
     const data={
-      rid:id,status
+      rid:userid,status,id
     }
+    console.log(id);
     try {
       const res=await axios.post('http://localhost:3001/acceptRequest',data)
+      fetchFriendRequests()
     } catch (error) {
       console.log(error);
     }
@@ -146,7 +148,7 @@ fetchSuggestedFriends()
         {/* LIFT */}
         <div className='hidden w-1/3 lg:w-1/4 h-full md:flex flex-col gap-6 overflow-y-auto'>
           <ProfileCard />
-          <FriendsCard friends={users?.friends} />
+          <FriendsCard  />
         </div>
         {/* CENTER */}
         <div className='flex-1 h-full  px-4 flex flex-col gap-6 overflow-y-auto rounded-lg'>

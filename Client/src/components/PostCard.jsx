@@ -9,6 +9,17 @@ import TextInput from './TextInput';
 import CustomeButton from './CustomeButton'
 import Loading from './Loading'
 import { postComments, posts } from './data';
+import axios from 'axios'
+
+const getPostComments=async(id) =>{
+try {
+  const res=await axios.get(`http://localhost:3001/post/comments/${id}`)
+  return res?.data
+} catch (error) {
+  console.log(error);
+}
+}
+
 const CommentForm=({user,id,replayAt,getComments})=>{
   const [loading,setLoading]=useState(false)
   const [errMsg,setErrMsg]=useState("")
@@ -20,7 +31,21 @@ const CommentForm=({user,id,replayAt,getComments})=>{
   }=useForm({
     mode:"onChange",
   });
-  const onSubmit= async (data)=>{}
+  const onSubmit= async (data)=>{
+    setLoading(true)
+    setErrMsg("");
+    try {
+      const URL =!replayAt?"/post/comment/"+id:"/post/replayComment"+id
+      const newData={comment:data?.comment,
+      from:`${user?.firstName}   ${user?.lastName}`,
+      replayAt:replayAt};
+
+      const res=await axios.post(`http://localhost:3001/${URL}`,{newData})
+      console.log(res);
+    } catch (error) {
+      
+    }
+  }
   return  (<form className='w-full border-b border-[#66666645] '  onSubmit={handleSubmit(onSubmit)}>
   <div className='w-full flex items-center gap-2 py-4'>
     <img src={user?.profileUrl?? NoProfile} alt='UserImage' className='w-10 h-10 rounded-full object-cover' />
@@ -86,9 +111,10 @@ const PostCard = ({post,user,deletePost,likePost}) => {
     const [loading,setLoading]=useState(false);
     const [replayComments,setReplayComments]=useState(0);
     const [showComments,setShowComments]=useState(0)
-const getComments = async () => {
+const getComments = async (id) => {
   setReplayComments(0)
-  setComments(postComments)
+  const result=await getPostComments(id)
+  setComments(result)
   setLoading(false)
 }
 const handleLike =async(uri)=>{

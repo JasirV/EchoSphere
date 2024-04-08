@@ -6,9 +6,10 @@ const userRouter=express.Router()
 userRouter.post('/register',userController.register)
 .post("/login",userController.loginUser)
 .get('/profilesection/:id',userController.profilesetion)
+.get('/getFriendsacc/:id',userController.getFriendsacc)
 //user Update and get user 
 .post('/getUser/:id?',userController.getUser)
-.put('/updateUser',userController.updateUser)
+.put('/updateUser',userController.updateUser) 
 
 //friend request
 

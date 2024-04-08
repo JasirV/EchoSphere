@@ -287,9 +287,7 @@ const getRequeset = async (req, res) => {
 };
 
 const acceptRequest=async(req,res)=>{
-const id=req.body.data
-const {rid,status}=req.body
-console.log(id," id  " ,rid ," rid " ,status ," status");
+const {rid,status,id}=req.body
 const requestEx=await FriendSchema.findById(rid);
 if(!requestEx){
     return res.status(200).json({
@@ -297,14 +295,14 @@ if(!requestEx){
         message:'No Request Found'
     })
 }
-const newRequest=await FriendSchema.findByIdAndUpdate(
+const newRequest=await FriendSchema.findByIdAndUpdate(  
     {_id:rid},
     {requestStatus:status}
     );
 
     if(status === "Accepted"){
-        const user=await UserSchema.findById(id);
-        user.friends.push(newRequest?.requestFrom);
+        const user = await UserSchema.findById("660d0b974a92f72987399432");
+        user.friends.push(newRequest?.requestFrom); 
         await user.save();
         const friend=await UserSchema.findById(newRequest?.requestFrom);
         friend.friends.push(newRequest?.requestTo);
@@ -542,7 +540,7 @@ const commentPost =async (req,res)=>{
     const {comment,from}=req.body;
     const {userId}= req.body.user
     const {id} =req.params;
-
+    console.log(id);
     if(comment === null){
         res.status(404).json({
             status:"fail",
@@ -590,10 +588,33 @@ const deletePost =async (req,res)=>{
         message:'succesFully Deleted'
     })
 }
+const getFriendsacc=async (req,res)=>{
+    try {
+        const userId=req.params.id
+        if(!userId){
+            return res.status(404).json({
+                status:'fail',
+                message:'user Id Not Found ',
+            })
+        }
+        const user = await UserSchema.findById(userId)
+        .populate({
+            path: 'friends',
+            select: 'firstName lastName profileUrl profession'
+        });
+        res.status(200).json({
+            status:'success',
+            message:'successFully Fetch data',
+            data:user
+        })
+    } catch (error) {
+        console.log(error);
+    }
+}
 
 
 
 module.exports={
     loginUser,register,profilesetion,getUser,updateUser,friendReuest,getRequeset,acceptRequest,profileViews,suggestedFriends,
-    createPost,getPost,getUserPost,getComments,likePost,likeComment,commentPost,replayComments,deletePost,
+    createPost,getPost,getUserPost,getComments,likePost,likeComment,commentPost,replayComments,deletePost,getFriendsacc
 }

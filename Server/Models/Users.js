@@ -32,7 +32,7 @@ const UserSchema=new Schema(
         },
         location: { type: String },
         profession: { type: String },
-        friends: [{ type: Schema.Types.ObjectId, ref: "Users" }],
+        friends: [{ type: Schema.Types.ObjectId, ref: "User" }],
         views: [{ type: String }],
         verified: { type: Boolean, default: false },
         photo:{
