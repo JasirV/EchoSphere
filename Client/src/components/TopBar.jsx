@@ -8,17 +8,24 @@ import { useForm } from 'react-hook-form';
 import {BsMoon, BsSunFill } from 'react-icons/bs';
 import {IoMdNotificationsOutline} from 'react-icons/io'
 import Logout from '../ReduX/userSlice'
+import {setTheme} from '../ReduX/theme'
 const TopBar = () => {
     const Navigation=useNavigate()
     const {theme}=useSelector((state)=>state.theme)
     const {user}=useSelector((state)=>state.user)
     const dispath=useDispatch();
     const{register,handleSubmit,formState:{errors}}=useForm()
-    const handleSearch=async (data)=>{}
+    const handleSearch=async (data)=>{
+    }
+    const handleTheme=()=>{
+        const themeValue= theme==='light'?'dark':'light'
+        dispath(setTheme(themeValue))
+    }
     const logOut=()=>{
         localStorage.clear()
         Navigation('/Login')
     }
+
   return (
     <div className='topbar w-full flex items-center justify-between py-3 md:py-6 px-4 bg-primary'>
         <Link to='/' className='flex gap-2 items-center'>
@@ -36,7 +43,7 @@ const TopBar = () => {
         {/* ICONS */}
 
         <div className='flex gap-4 items-center text-ascent-1 text-md md:text-xl'> 
-        <button>
+        <button onClick={()=>{handleSearch()}}>
             {theme?<BsMoon/>:<BsSunFill />}
         </button>
         <div className='hidden lg:flex'>

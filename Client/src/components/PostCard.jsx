@@ -20,7 +20,7 @@ try {
 }
 }
 
-const CommentForm=({user,id,replayAt,getComments})=>{
+const CommentForm=({user,postId,replayAt,getComments})=>{
   const [loading,setLoading]=useState(false)
   const [errMsg,setErrMsg]=useState("")
   const {
@@ -35,14 +35,24 @@ const CommentForm=({user,id,replayAt,getComments})=>{
     setLoading(true)
     setErrMsg("");
     try {
-      const URL =!replayAt?"/post/comment/"+id:"/post/replayComment"+id
+      const URL =!replayAt?"/post/comment/"+postId:"/post/replayComment"+postId
       const newData={comment:data?.comment,
       from:`${user?.firstName}   ${user?.lastName}`,
-      replayAt:replayAt};
-
+      replayAt:replayAt,};
       const res=await axios.post(`http://localhost:3001/${URL}`,{newData})
-      console.log(res);
+      if(res?.status=='fail'){
+        setErrMsg(res)
+      }else{
+        reset({
+          comment:" ",
+      })
+      setErrMsg('')
+      await getComments()
+    }
+    setLoading(false)
     } catch (error) {
+      console.log(error);
+      setLoading(false)
       
     }
   }
@@ -177,7 +187,7 @@ const handleLike =async(uri)=>{
           <div className='w-full mt-4 border-t border-[#66666646]'>
             <CommentForm 
             user={user}
-            id={post?._id}
+            postId={post?._id}
             getComments={()=>getComments(post?._id) }/>
             {loading?(<Loading />):(
               comments?.length>0?(
@@ -193,7 +203,7 @@ const handleLike =async(uri)=>{
                         {c?.userId?.firstName}{c?.userId?.lastName}
                       </p>
                     </Link>
-                    <span className='text-ascent-2 text-sm'>
+                    <span className='text-ascent-2 hidden md:flex'>
                       {moment(c?.createAt??"2024-03-27").fromNow()}
                     </span>
                   </div>
@@ -201,7 +211,9 @@ const handleLike =async(uri)=>{
                   <div className='ml-12'>
                     <p className='text-ascent-2'>{c?.comment}</p>
                     <div className='mt-2 flex gap-6'>
-                      <p className='flex gap-2 items-center text-base text-ascent-2 cursor-pointer'>{c?.likes?.includes(user?._id)?(
+                      <p className='flex gap-2 items-center text-base text-ascent-2 cursor-pointer' 
+                      onClick={()=>handleLike('/post/likeComment/'+c?._id)}
+                      >{c?.likes?.includes(user?._id)?(
                         <BiSolidLike size={20} color='blue'/>
                       ):(
                         <BiLike size={20} />
@@ -212,7 +224,7 @@ const handleLike =async(uri)=>{
                       </span>
                     </div>
                     {replayComments ===c?._id&&(
-                      <CommentForm user={user} id={c?._id} replayAt={c?.form} getComments={()=>getComments(post?._id)} />
+                      <CommentForm user={user} postId={c?._id} replayAt={c?.form} getComments={()=>getComments(post?._id)} />
                     )}
                   </div>
                   {/* REPLIES */}

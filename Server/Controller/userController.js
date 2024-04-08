@@ -538,19 +538,19 @@ const likeComment=async(req,res)=>{
 }
 const commentPost =async (req,res)=>{
     const {comment,from}=req.body;
-    const {userId}= req.body.user
+    // const {userId}= req.body.user
     const {id} =req.params;
     console.log(id);
     if(comment === null){
         res.status(404).json({
             status:"fail",
             message:'Comment is required'
-        })
+        }) 
     }
-    const newComment= new CommentSchema({comment,from,userId,postId:id})
+    const newComment= new CommentSchema({comment,from,postId:id})
     await newComment.save()
 
-    const post =await PostSchema.findById(id)
+    const post =await PostSchema.findById("66102b4f8e5b299ffd9f990e")
     post.comment.push(newComment._id)
 
     const updatePost=await PostSchema.findByIdAndUpdate(id,post,{new:true})
