@@ -11,7 +11,6 @@ const FriendsCard = () => {
       const fetchData = async () => {
         try {
           const response = await axios.get(`http://localhost:3001/getFriendsacc/${userId}`);
-          console.log(response);
           setuser(response.data.data) 
         } catch (error) {
           console.error('Error fetching data:', error);
@@ -20,7 +19,6 @@ const FriendsCard = () => {
   
       fetchData();
     }, []);
-    console.log(user);
   return (
     <div>
         <div className='w-full bg-primary shadow-sm rounded-lg px-6 py-5'>
@@ -30,7 +28,7 @@ const FriendsCard = () => {
             </div>
             <div className='w-full flex flex-col gap-4 pt-4'>
                 {user?.friends?.map((i,indesx)=>(
-                    <Link to={`/profile ${i._id}`} key={i._id||indesx} className='w-full flex gap-4 items-center cursor-pointer'>
+                    <Link to={`/profile ${i._id}`} key={indesx} className='w-full flex gap-4 items-center cursor-pointer'>
                         <img src={i?.profileUrl??NoProfile} alt={i?.firstName}  className='w-10 h-10 object-cover rounded-full'/>
                         <div className='flex-1'>
                             <p className='text-base font-medium text-ascent-1'>

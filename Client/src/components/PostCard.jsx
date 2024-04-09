@@ -14,7 +14,7 @@ import axios from 'axios'
 const getPostComments=async(id) =>{
 try {
   const res=await axios.get(`http://localhost:3001/post/comments/${id}`)
-  return res?.data
+  return res?.data?.data
 } catch (error) {
   console.log(error);
 }
@@ -34,12 +34,17 @@ const CommentForm=({user,postId,replayAt,getComments})=>{
   const onSubmit= async (data)=>{
     setLoading(true)
     setErrMsg("");
+    console.log(replayAt,"replay");
     try {
-      const URL =!replayAt?"/post/comment/"+postId:"/post/replayComment"+postId
+      const URL =!replayAt?"post/comment/"+postId:"post/replayComment/"+postId
       const newData={comment:data?.comment,
       from:`${user?.firstName}   ${user?.lastName}`,
+      userId:user?._id,
       replayAt:replayAt,};
+      console.log(newData);
+      console.log(URL);
       const res=await axios.post(`http://localhost:3001/${URL}`,{newData})
+      console.log(res);
       if(res?.status=='fail'){
         setErrMsg(res)
       }else{
@@ -47,7 +52,7 @@ const CommentForm=({user,postId,replayAt,getComments})=>{
           comment:" ",
       })
       setErrMsg('')
-      await getComments()
+      await getPostComments(postId)
     }
     setLoading(false)
     } catch (error) {
@@ -119,7 +124,7 @@ const PostCard = ({post,user,deletePost,likePost}) => {
     const [showReplay,setShowReplay]=useState(0);
     const [comments,setComments]=useState([])
     const [loading,setLoading]=useState(false);
-    const [replayComments,setReplayComments]=useState(0);
+    const [replayComments,setReplayComments]=useState(null);
     const [showComments,setShowComments]=useState(0)
 const getComments = async (id) => {
   setReplayComments(0)
@@ -224,16 +229,16 @@ const handleLike =async(uri)=>{
                       </span>
                     </div>
                     {replayComments ===c?._id&&(
-                      <CommentForm user={user} postId={c?._id} replayAt={c?.form} getComments={()=>getComments(post?._id)} />
+                      <CommentForm user={user} postId={c?._id} replayAt={c?.from} getComments={()=>getComments(post?._id)} />
                     )}
                   </div>
                   {/* REPLIES */}
                   <div className='py-2 px-8 mt-6'>
                     {c?.replies?.length >0 &&(
-                      <p className='text-base text-ascent-1 cursor-pointer' onClick={()=>setShowReplay(showReplay === c?.replies?._id ?0 :c?.replies?.length)}>Show Replies({c?.replies?.length})</p>
+                      <p className='text-base text-ascent-1 cursor-pointer' onClick={()=>setShowReplay(showReplay === c?.replies?._id ? 0 :c?.replies?._id)}>Show Replies({c?.replies?.length})</p>
                     )}
                     {
-                      showReplay === c?.replies?._id &&
+                      showReplay == c?.replies?._id &&
                       c?.replies?.map((reply)=>(
                         <ReplayCard reply={reply} user={user} key={reply?._id} handleLike={()=>handleLike(`/posts/like-comment/${c?._id}/${reply?._id}`)} />
                       ))

@@ -18,22 +18,10 @@ import NoProfile from '../assets/ProfilePng.png'
 import { updateProfile } from '../ReduX/userSlice';
 import axios from 'axios';
 
-const  ProfileCard = () => {
+const  ProfileCard = ({user}) => {
     const {user:data,edit}=useSelector((state)=>state.user)
-    const [user,setuser]=useState()
+    // const [user,setuser]=useState()
     const userId=localStorage.getItem('user')
-    useEffect(() => {
-      const fetchData = async () => {
-        try {
-          const response = await axios.get(`http://localhost:3001/profilesection/${userId}`);
-          setuser(response.data.data) 
-        } catch (error) {
-          console.error('Error fetching data:', error);
-        }
-      };
-  
-      fetchData();
-    }, []);
     const dispatch =useDispatch();
   return (
     <div>

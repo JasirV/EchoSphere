@@ -361,7 +361,6 @@ const createPost=async(req,res)=>{
     try {
         const { userId } = req.body;
         const { description, image } = req.body;
-    
         if (!description) {
           next("You must provide a description");
           return;
@@ -433,20 +432,29 @@ const getUserPost=async(req,res)=>{
     })
 }
 const getComments=async(req,res)=>{
-    const {postId} =req.params;
+    const { postId } = req.params;
 
-    const postComments=await CommentSchema.find({postId})
-    .populate({path:'userId',
-select:"firstName lastName location profileUrl -password" 
-}).populate({path:'replies.userId',select:'firstName lastName locationi profileUrl -password'})
-.sort({_id:-1});
+    try {
+        const postComments = await CommentSchema.find({ postId })
+            .populate({
+                path: 'replies.userId',
+                select: 'firstName lastName location profileUrl'
+            })
+            .sort({ _id: -1 });
 
-res.status(200).json({
-    status:"success",
-    message:"successFully",
-    data:postComments
-})
-}
+        res.status(200).json({
+            status: "success",
+            message: "Successfully retrieved comments",
+            data: postComments
+        });
+    } catch (error) {
+        console.error('Error fetching comments:', error);
+        res.status(500).json({
+            status: "error",
+            message: "Failed to retrieve comments"
+        });
+    }
+};
 
 const likePost = async (req, res) => {
     const { userId } = req.body;
@@ -496,7 +504,7 @@ const likePost = async (req, res) => {
   
 
 const likeComment=async(req,res)=>{
-    const {userId}=req.body.user
+    const {userId}=req.body;
     const {id,rid}=req.params;
 
     if(rid===undefined||rid === null ||rid ==="false"){
@@ -520,13 +528,14 @@ const likeComment=async(req,res)=>{
                 }
             }
         )
-    };
+   
     const index =replyComments?.replies[0]?.likes.findIndex((i)=>i===String(userId))
     if(index === -1 ){
         replyComments.replies[0].likes.push(userId)
     }else{
         replyComments.replies[0].likes=replyComments.replies[0]?.likes.filter((i)=>i!== String(userId))
     }
+
     const query={_id:id,"replies._id":rid}
     const updated={
         $set:{
@@ -534,34 +543,47 @@ const likeComment=async(req,res)=>{
         }
     }
     const result=await CommentSchema.updateOne(query,updated,{new:true});
-   res.status(201).json(result); 
+    res.status(201).json(result); 
+};
 }
 const commentPost =async (req,res)=>{
-    const {comment,from}=req.body;
-    // const {userId}= req.body.user
-    const {id} =req.params;
-    console.log(id);
-    if(comment === null){
-        res.status(404).json({
-            status:"fail",
-            message:'Comment is required'
-        }) 
+    const { comment, from, userId } = req.body.newData;
+    const { id } = req.params;
+
+    if (!comment) {
+        return res.status(400).json({ 
+            status: "fail",
+            message: "Comment is required"
+        });
     }
-    const newComment= new CommentSchema({comment,from,postId:id})
-    await newComment.save()
 
-    const post =await PostSchema.findById("66102b4f8e5b299ffd9f990e")
-    post.comment.push(newComment._id)
+    try {
+        const newComment = new CommentSchema({
+            comment,
+            from,
+            userId,
+            postId: id
+        });
 
-    const updatePost=await PostSchema.findByIdAndUpdate(id,post,{new:true})
-    res.status(201).json(newComment)
-}
+        await newComment.save();
+        const post = await PostSchema.findById(id); 
+        post.comment.push(newComment._id);
+        const updatedPost = await post.save();
+        res.status(201).json(newComment);
+    } catch (error) {
+        console.error('Error creating comment:', error);
+        res.status(500).json({
+            status: "error",
+            message: "Failed to create comment"
+        });
+    }
+};
 
 const replayComments= async(req,res)=>{
-    const {userId}=req.body.user;
-    const {comment,replyAt,from}=req.body
+    const {userId}=req.body.newData;
+    const {comment,replyAt,from}=req.body.newData
     const {id}=req.params;
-
+    console.log(userId," userId ",comment," comment ",replyAt," replayAt ", from ," from " ,id, ' Id ');
     if(comment === null ){
         return res.status(400).json({
             message:'Comment is Required'

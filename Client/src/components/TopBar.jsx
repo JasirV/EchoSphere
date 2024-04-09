@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { SlSocialStumbleupon } from "react-icons/sl";
 import {Link, useNavigate} from 'react-router-dom'
@@ -9,13 +9,18 @@ import {BsMoon, BsSunFill } from 'react-icons/bs';
 import {IoMdNotificationsOutline} from 'react-icons/io'
 import Logout from '../ReduX/userSlice'
 import {setTheme} from '../ReduX/theme'
+import { Data } from '../App';
+import axios from 'axios'
 const TopBar = () => {
+    const {setPosts}=useContext(Data)
     const Navigation=useNavigate()
     const {theme}=useSelector((state)=>state.theme)
     const {user}=useSelector((state)=>state.user)
     const dispath=useDispatch();
     const{register,handleSubmit,formState:{errors}}=useForm()
     const handleSearch=async (data)=>{
+            const res=await axios.post('http://localhost:3001/post',{data})
+            setPosts(res.data.data);
     }
     const handleTheme=()=>{
         const themeValue= theme==='light'?'dark':'light'

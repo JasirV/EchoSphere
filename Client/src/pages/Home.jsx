@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { useDispatch,useSelector } from 'react-redux'
 import TopBar from '../components/TopBar'
 import ProfileCard from '../components/ProfileCard'
@@ -17,14 +17,15 @@ import Story from '../components/Story'
 import TopBarProfilwe from '../components/TopBarProfilwe'
 import Profile from './Profile'
 import axios from 'axios'
-import { handleFileUpload } from '../utils'
+import { Data } from '../App'
+import {handleFileUpload} from '../utils'
 
 const Home = () => {
   //useSelector((state)=>state.user)
   const id=localStorage.getItem('user')
   const token=localStorage.getItem('token')
   const user=localStorage.getItem('user')
-  const [users, setusers] = useState(id)
+  const [users, setusers] = useState()
   const [errMsg, setErrMsg] = useState('')
   const [friendRequest, setFriendRequest] = useState()
   const [file, setFile] = useState(null);
@@ -32,17 +33,21 @@ const Home = () => {
   const [loading, setloading] = useState(false)
   const [description,setDescription]=useState('')
   const [suggestion,setSuggestion]=useState()
-  const [posts,setPosts]=useState([])
+  const {posts,setPosts}=useContext(Data)
   const { register,handleSubmit,reset, formState: { errors } } = useForm()
   const dispatch=useDispatch()
+  const handleImageUpload = (event) => {
+    const file = event.target.files[0]; 
+    setFile(file); 
+  };
   const handlePostSubmit = async (data) => {
     setPosting(true);
     setErrMsg("");
-    console.log(data);
+    console.log(data ,'data');
     try {
-      const uri=file &&(await handleFileUpload(file))
+      const a= await handleFileUpload(file)
+      const uri=file&&a
       const newData=uri ?{...data,image:uri}:data;
-console.log(newData);
       const response = await axios.post('http://localhost:3001/post/createPost',newData);
       if(response?.status==='fail'){
         setErrMsg(response);
@@ -131,7 +136,15 @@ console.log(newData);
       console.log(error);
     }
   }
-  const getUsers=async()=>{}
+  const getUsers=async()=>{
+    const userId=id
+    try {
+      const response = await axios.get(`http://localhost:3001/profilesection/${userId}`);
+      setusers(response.data.data) 
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  }
   useEffect(()=>{
 setloading(true)
 getUsers()
@@ -139,7 +152,6 @@ fetchPost()
 fetchFriendRequests()
 fetchSuggestedFriends()
   },[])
-
   return (
     <>
     <div className='home w-full px- lg:px-10 pb-20 2xl:px-40 bg-bgColor lg:rounded-lg h-screen overflow-hidden'>
@@ -147,7 +159,7 @@ fetchSuggestedFriends()
       <div className='w-full flex gap-2 lg:gap-4 pt-5 pb-10 h-full'>
         {/* LIFT */}
         <div className='hidden w-1/3 lg:w-1/4 h-full md:flex flex-col gap-6 overflow-y-auto'>
-          <ProfileCard />
+          <ProfileCard user={users}/>
           <FriendsCard  />
         </div>
         {/* CENTER */}
@@ -181,6 +193,7 @@ fetchSuggestedFriends()
                   className='hidden'
                   data-max-size='5120'
                   accept='.jpg,.png,.jpeg'
+                  onChange={handleImageUpload}
                 />
               </label>
 
@@ -197,7 +210,7 @@ fetchSuggestedFriends()
               </label>
               <label htmlFor="vgifUpload" className='flex items-center gap-1 text-base text-ascent-2 text-ascent-1 cursor-pointer'>
                 <BsFiletypeGif />
-                <span>Gif </span>
+                <span>Gif </span> 
                 <input type="file" id="vgifUpload"  className='hidden' data-max-size='5120' accept='.gif' />
               </label>
               <div>{posting ? (
@@ -208,7 +221,7 @@ fetchSuggestedFriends()
           {loading ? (<Loading />) : posts?.length > 0 ? (
             posts?.map((post) => (
               <PostCard key={post?._id} post={post}
-                user={user}
+                user={users}
                 deletePost={handleDelete}
                 likePost={handleLikePost} />
             ))
