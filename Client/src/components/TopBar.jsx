@@ -24,6 +24,7 @@ const TopBar = () => {
     }
     const handleTheme=()=>{
         const themeValue= theme==='light'?'dark':'light'
+        console.log(themeValue);
         dispath(setTheme(themeValue))
     }
     const logOut=()=>{
@@ -49,10 +50,10 @@ const TopBar = () => {
 
         <div className='flex gap-4 items-center text-ascent-1 text-md md:text-xl'> 
         <button onClick={()=>{handleSearch()}}>
-            {theme?<BsMoon/>:<BsSunFill />}
+            {theme?<BsMoon onClick={()=>handleTheme()}/>:<BsSunFill onClick={()=>handleTheme()}/>}
         </button>
         <div className='hidden lg:flex'>
-            <IoMdNotificationsOutline />
+            <IoMdNotificationsOutline  />
         </div>
         <div>
             <CustomeButton onClick={()=>logOut()}
