@@ -8,11 +8,14 @@ import { Data } from '../App';
 import About from '../components/About';
 import Friends from '../components/Friends';
 import Media from '../components/Media';
+import { useNavigate } from 'react-router-dom'
 const Profile = () => {
   // const {id} =useParams();
   // const {posts} =useSelector((state)=>state.posts);
   const [shortImg,setShortImg]=useState([1,2,3,4])
   const {value}=useContext(Data)
+  const navigate=useNavigate()
+
 
   return (
     <>
@@ -48,7 +51,7 @@ const Profile = () => {
     {/* Buttons Section */}
     <div className='flex justify-center lg:justify-start mt-4' style={{ marginLeft: '10vw', marginRight: '10vw' }}>
     <CustomeButton type='Add to story' titile='Add to story' containerStyle='bg-[#0444a4] text-white py-1 px-4 rounded-full font-semibold text-l  '/> 
-      <CustomeButton type='Add to story' titile='Edit Profile' containerStyle='bg-[#FFFFFF] text-black py-1 px-4 rounded-full font-semibold text-l mx-1 '/> 
+      <CustomeButton type='Edit Profile' onClick={()=>navigate('/ProfileEditing')} titile='Edit Profile' containerStyle='bg-[#FFFFFF] text-black py-1 px-4 rounded-full font-semibold text-l mx-1 '/> 
 </div>
     </div>
     <NavProfile />

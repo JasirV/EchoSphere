@@ -39,6 +39,10 @@ const UserSchema=new Schema(
             type:String,
             default:"https://media.istockphoto.com/id/1337144146/vector/default-avatar-profile-icon-vector.jpg?s=612x612&w=0&k=20&c=BIbFwuv7FxTWvh5S3vB6bkT0Qv8Vn8N5Ffseq84ClGI="
         },
+        coverPhoto:{
+            type:String,
+            default:"https://images.ctfassets.net/pdf29us7flmy/1mzkiaBqdWkAF8smX4s0rb/007dda81b2bf0f48402e3c1258ea24da/search_engine1_GettyImages-1136801544_.jpg?w=720&q=100&fm=jpg"
+        },
       },
       { timestamps: true }
     );

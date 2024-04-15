@@ -8,6 +8,7 @@ import {useSelector} from 'react-redux'
 import axios from 'axios'
 import VerificationCheck from "./components/VerificationCheck";
 import { createContext, useState } from "react";
+import Editing from "./components/Editing";
 const token=localStorage.getItem('token')
 export const Axios=axios.create({
   baseURL:'http://localhost:3001/',
@@ -29,10 +30,11 @@ function Layout(){
 function App() {
   const [posts,setPosts]=useState()
   const {theme}=useSelector((state)=>state.theme)
+  const [value,setValue]=useState('post')
 
   return (
     <div data-theme={theme} className="w-full min-h-[100vh]" >
-  <Data.Provider value={{posts,setPosts}}>
+  <Data.Provider value={{posts,setPosts,value,setValue}}>
  <Routes>
   <Route element={<Layout />}>
     <Route path="/home" element={<Home />} />
@@ -42,6 +44,7 @@ function App() {
   <Route path="/login" element={<Login />} />
   <Route path="/reset-password" element={<ResetPassword />} />
   <Route path="verificationCheck" element={<VerificationCheck />} />
+  <Route path ="ProfileEditing" element={<Editing/>} />
 </Routes>
   </Data.Provider>
 

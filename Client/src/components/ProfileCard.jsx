@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { user } from './data'
 import { UseDispatch,useDispatch,useSelector } from 'react-redux';
 import {LiaEditSolid} from "react-icons/lia"
@@ -23,12 +23,13 @@ const  ProfileCard = ({user}) => {
     // const [user,setuser]=useState()
     const userId=localStorage.getItem('user')
     const dispatch =useDispatch();
+    const navigation=useNavigate()
   return (
     <div>
         <div className='w-full bg-primary flex flex-col item-center shadow-sm rounded-xl px-6 py-4'>
             <div className='w-full flex items-center jsutify-between border-b pb-5  border-[#66666645]'>
                 <Link to={'/profile/'} className='flex gap-2'>
-                    <img src={user?.profileUrl??NoProfile} alt={user?.email} className='w-14 h-14 object-cover rounded-full' />
+                    <img src={user?.photo??NoProfile} alt={user?.email} className='w-14 h-14 object-cover rounded-full' />
                     <div className='flex flex-col justify-center'>
                         <p className='text-lg font-medium text-asxent-1' >{user?.firstName} {user?.lastName}</p>
                         <span className='text-asxent-1'>{user?.profession ?? "NO Profession"}</span>
@@ -46,7 +47,7 @@ const  ProfileCard = ({user}) => {
                 className='bg-[#0444a430] text-sm text-white p-1 rounded'
                 onClick={() => {}}
               >
-                <MdEdit  size={20} className='text-[#0f52b6]' />
+                <MdEdit  size={20} className='text-[#0f52b6]' onClick={()=>navigation('/ProfileEditing')}/>
               </button>
             )}
           </div>
