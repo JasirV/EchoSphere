@@ -29,10 +29,11 @@ function Layout(){
 function App() {
   const [posts,setPosts]=useState()
   const {theme}=useSelector((state)=>state.theme)
+  const [value,setValue]=useState('post')
 
   return (
     <div data-theme={theme} className="w-full min-h-[100vh]" >
-  <Data.Provider value={{posts,setPosts}}>
+  <Data.Provider value={{posts,setPosts,value,setValue}}>
  <Routes>
   <Route element={<Layout />}>
     <Route path="/home" element={<Home />} />

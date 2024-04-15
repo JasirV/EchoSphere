@@ -634,9 +634,28 @@ const getFriendsacc=async (req,res)=>{
     }
 }
 
+const usergetpost=async (req,res)=>{
+    try {
+        const userId=req.params.id
+        const post =await PostSchema.find({userId})
+        if(!post){
+            return res.status(404).json({
+                status:"fail",
+                message:'Post No Found This User'
+            })
+        }
+        res.status(200).json({
+            status:'success',
+            data:post
+        })
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 
 
 module.exports={
     loginUser,register,profilesetion,getUser,updateUser,friendReuest,getRequeset,acceptRequest,profileViews,suggestedFriends,
-    createPost,getPost,getUserPost,getComments,likePost,likeComment,commentPost,replayComments,deletePost,getFriendsacc
+    createPost,getPost,getUserPost,getComments,likePost,likeComment,commentPost,replayComments,deletePost,getFriendsacc,usergetpost
 }
