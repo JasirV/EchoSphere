@@ -43,8 +43,8 @@ function App() {
   <Route path="/" element={<Register />} />
   <Route path="/login" element={<Login />} />
   <Route path="/reset-password" element={<ResetPassword />} />
-  <Route path="verificationCheck" element={<VerificationCheck />} />
-  <Route path ="ProfileEditing" element={<Editing/>} />
+  <Route path="/verificationCheck" element={<VerificationCheck />} />
+  <Route path ="/ProfileEditing" element={<Editing/>} />
 </Routes>
   </Data.Provider>
 

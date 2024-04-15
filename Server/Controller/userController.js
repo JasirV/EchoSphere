@@ -190,23 +190,21 @@ const getUser=async (req,res)=>{
 }
 
 const updateUser=async(req,res)=>{
-
-    const {firstName,lastName,location,profileUrl,profession}=req.body
-
-    if(!firstName||!lastName||!location||!profileUrl||!profession){
+    const {firstName,lastName,location,profession,photo,coverPhoto}=req.body.newData
+    if(!firstName||!lastName||!location||!profession){
         return res.status(404).json({
             status:'fail',
             message:'Fill The fields'
         })
     }
-    const {userId}=req.body.user;
+    const {userId}=req.body.newData;
     const updateData={
-        firstName,lastName,location,profileUrl,profession,
+        firstName,lastName,location,profession,coverPhoto,photo,
         _id:userId
     }
 
     const user=await UserSchema.findByIdAndUpdate(userId,updateData,{new:true})
-    await user.populate({path:'friends',select:'-password'})
+    await user.populate({path:'friends'})
     const token=tokengenerator(user?._id)
     user.password=undefined;
     res.status(200).json({
