@@ -6,9 +6,11 @@ import CustomeButton from './CustomeButton';
 import Loading from './Loading';
 import { useForm } from 'react-hook-form';
 import NoProfile from '../assets/ProfilePng.png';
+import { useNavigate } from 'react-router-dom'
 
 const ProfilePost = () => {
     const user = "hai";
+    const navigation=useNavigate()
     const [errMsg, setErrMsg] = useState('');
     const { register, handleSubmit, formState: { errors } } = useForm();
     const handlePosrSubmit = async (data) => {};
@@ -16,7 +18,7 @@ const ProfilePost = () => {
     const [file, setFile] = useState('');
 
     return (
-        <div className='w-full bg-bgColor flex justify-center'>
+        <div className='w-full bg-bgColor flex justify-center' onClick={()=>navigation('/home')}>
         <form  className='bg-primary px-4 rounded-lg w-1/2'>
         <div className='w-full flex item-center gap-2 py-4 border-b border-[#66666645]'>
           <img src={user?.profileUrl ?? NoProfile} alt='UserImage' className='w-14 h-14 rounded-full object-cover' />
@@ -27,8 +29,6 @@ name="description"
 register={register('description', { required: "Write something about the post." })}
 error={errors.description ? errors.description.message : ""} 
 />
-
-
         </div>
         {errMsg?.message && (
           <span role='alert' className={`text-sm ${errMsg?.status === 'fail' ? "text-[#f64949fe]" : "text-[#2ba150fe]"}mt-0.5`}>

@@ -11,7 +11,6 @@ import Loading from '../components/Loading';
 import CustomeButton from '../components/CustomeButton';
 import BgImage from '../assets/social-media-cropped.png';
 import axios from 'axios';
-import { UserLogin } from '../ReduX/userSlice';
 const Login = () => {
   const navigation=useNavigate()
   const {
