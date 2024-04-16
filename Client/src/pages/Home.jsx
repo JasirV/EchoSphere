@@ -145,7 +145,7 @@ const Home = () => {
       console.error('Error fetching data:', error);
     }
   }
-  useEffect(()=>{
+useEffect(()=>{
 setloading(true)
 getUsers()
 fetchPost()
@@ -169,14 +169,12 @@ fetchSuggestedFriends()
             <div className='w-full flex item-center gap-2 py-4 border-b border-[#66666645]'>
               <img src={users?.photo?? NoProfile} alt='UserImage' className='w-14 h-14 rounded-full object-cover' />
               <TextInput
-  styles='w-full rounded-full py-5'
-  placeholder='Whats on your mind...'
-  name="description"
-  register={register('description', { required: "Write something about the post." })}
-  error={errors.description ? errors.description.message : ""} 
-/>
-
-
+                styles='w-full rounded-full py-5'
+                placeholder='Whats on your mind...'
+                name="description"
+                register={register('description', { required: "Write something about the post." })}
+                error={errors.description ? errors.description.message : ""} 
+              />
             </div>
             {errMsg?.message && (
               <span role='alert' className={`text-sm ${errMsg?.status === 'fail' ? "text-[#f64949fe]" : "text-[#2ba150fe]"}mt-0.5`}>

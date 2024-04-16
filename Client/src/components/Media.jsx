@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
-const Media = () => {
-    const userId =localStorage.getItem('user')
+const Media = ({userId}) => {
     const [post,setPost]=useState()
     const fetchpost =async ()=>{
         try {

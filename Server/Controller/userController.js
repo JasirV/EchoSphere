@@ -154,7 +154,7 @@ const profilesetion = async (req, res) => {
             message:"Need For User"
         })    
     }
-    const user= await UserSchema.findOne({_id:userId})
+    const user= await UserSchema.findOne({_id:userId}).populate({path:'friends'})
     if(!user){
         return res.status(404).json({
             status:'fail',

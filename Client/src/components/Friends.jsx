@@ -36,70 +36,8 @@ const TABS = [
 ];
  
 const TABLE_HEAD = ["Profile", "Name",];
- 
-const TABLE_ROWS = [
-  {
-    img: "https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-3.jpg",
-    name: "John Michael",
-    email: "john@creative-tim.com",
-    job: "Manager",
-    org: "Organization",
-    online: true,
-    date: "23/04/18",
-  },
-  {
-    img: "https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-2.jpg",
-    name: "Alexa Liras",
-    email: "alexa@creative-tim.com",
-    job: "Programator",
-    org: "Developer",
-    online: false,
-    date: "23/04/18",
-  },
-  {
-    img: "https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-1.jpg",
-    name: "Laurent Perrier",
-    email: "laurent@creative-tim.com",
-    job: "Executive",
-    org: "Projects",
-    online: false,
-    date: "19/09/17",
-  },
-  {
-    img: "https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-4.jpg",
-    name: "Michael Levi",
-    email: "michael@creative-tim.com",
-    job: "Programator",
-    org: "Developer",
-    online: true,
-    date: "24/12/08",
-  },
-  {
-    img: "https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-5.jpg",
-    name: "Richard Gran",
-    email: "richard@creative-tim.com",
-    job: "Manager",
-    org: "Executive",
-    online: false,
-    date: "04/10/21",
-  },
-];
- 
-function Friends() {
-    const [user,setuser]=useState([])
-    const userId=localStorage.getItem('user')
-    useEffect(() => {
-      const fetchData = async () => {
-        try {
-          const response = await axios.get(`http://localhost:3001/getFriendsacc/${userId}`);
-          setuser(response.data.data) 
-        } catch (error) {
-          console.error('Error fetching data:', error);
-        }
-      };
   
-      fetchData();
-    }, []);
+function Friends({user}) {
   return (
     <div className="h-full w-full bg-bgColor flex justify-center" >
     <Card className="h-full w-1/2 ">
@@ -126,7 +64,7 @@ function Friends() {
           <tbody>
             {user?.friends?.map(
               (i, index) => {
-                const isLast = index === TABLE_ROWS.length - 1;
+                const isLast = index === user?.friends?.length - 1;
                 const classes = isLast
                   ? "p-4"
                   : "p-4 border-b border-blue-gray-50";

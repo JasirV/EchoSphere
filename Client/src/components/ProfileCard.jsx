@@ -20,15 +20,13 @@ import axios from 'axios';
 
 const  ProfileCard = ({user}) => {
     const {user:data,edit}=useSelector((state)=>state.user)
-    // const [user,setuser]=useState()
-    const userId=localStorage.getItem('user')
     const dispatch =useDispatch();
     const navigation=useNavigate()
   return (
     <div>
         <div className='w-full bg-primary flex flex-col item-center shadow-sm rounded-xl px-6 py-4'>
             <div className='w-full flex items-center jsutify-between border-b pb-5  border-[#66666645]'>
-                <Link to={'/profile/'} className='flex gap-2'>
+                <Link to={`/profile/${user?._id}`} className='flex gap-2'>
                     <img src={user?.photo??NoProfile} alt={user?.email} className='w-14 h-14 object-cover rounded-full' />
                     <div className='flex flex-col justify-center'>
                         <p className='text-lg font-medium text-asxent-1' >{user?.firstName} {user?.lastName}</p>

@@ -1,21 +1,7 @@
 import { Card, Typography } from "@material-tailwind/react";
 import { useEffect, useState } from "react";
 import axios from 'axios'
- function About() {
-    const [user,setUser]=useState()
-    const userId=localStorage.getItem('user')
-    useEffect(()=>{
-         const fetchuserdata=async()=>{
-            try {
-                const res=await axios.get(`http://localhost:3001/profilesection/${userId}`)
-                setUser(res.data.data)
-                
-            } catch (error) {
-                console.log(error)
-            }
-    }
-    fetchuserdata()
-    },[])
+ function About({user}) {
   return (
     <div className="bg-bgColor h-full flex justify-center">
     <Card className="h-full w-1/2 overflow-scroll">
