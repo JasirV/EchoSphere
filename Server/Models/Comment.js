@@ -3,7 +3,7 @@ const Schema=mongoose.Schema;
 
 const ReplySchema = new Schema({
     rid: { type: Schema.Types.ObjectId },
-    userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    userId: { type: Schema.Types.ObjectId, ref: 'User',},
     from: { type: String },
     replyAt: { type: String },
     comment: { type: String },

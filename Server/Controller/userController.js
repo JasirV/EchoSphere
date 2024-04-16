@@ -398,7 +398,7 @@ const getPost=async(req,res)=>{
 
     const posts =await PostSchema.find(search?searchPostQuery:{}).populate({
         path:'userId',
-        select:'firstName lastName location profileUrl'
+        select:'firstName lastName location photo'
     }).sort({_id:-1});
     const friendsPosts=posts?.filter((post)=>{
         return friends.includes(post?.userId?._id.toString())
@@ -434,10 +434,17 @@ const getComments=async(req,res)=>{
 
     try {
         const postComments = await CommentSchema.find({ postId })
-            .populate({
-                path: 'replies.userId',
-                select: 'firstName lastName location profileUrl'
-            })
+        .populate({
+            path: 'replies',
+            populate: {
+                path: 'userId',
+                select: 'firstName lastName location photo'
+            }
+        })
+        .populate({
+            path: 'userId',
+            select: 'firstName lastName location photo'
+        })
             .sort({ _id: -1 });
 
         res.status(200).json({
@@ -581,7 +588,6 @@ const replayComments= async(req,res)=>{
     const {userId}=req.body.newData;
     const {comment,replyAt,from}=req.body.newData
     const {id}=req.params;
-    console.log(userId," userId ",comment," comment ",replyAt," replayAt ", from ," from " ,id, ' Id ');
     if(comment === null ){
         return res.status(400).json({
             message:'Comment is Required'

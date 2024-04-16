@@ -21,7 +21,7 @@ import { Data } from '../App'
 import {handleFileUpload} from '../utils'
 
 const Home = () => {
-  //useSelector((state)=>state.user)
+  // const {user}=useSelector((state)=>state.user)
   const id=localStorage.getItem('user')
   const token=localStorage.getItem('token')
   const user=localStorage.getItem('user')
@@ -167,7 +167,7 @@ fetchSuggestedFriends()
           <Story posts={posts} />
           <form onSubmit={handleSubmit(handlePostSubmit)} className='bg-primary px-4 rounded-lg'>
             <div className='w-full flex item-center gap-2 py-4 border-b border-[#66666645]'>
-              <img src={user?.profileUrl ?? NoProfile} alt='UserImage' className='w-14 h-14 rounded-full object-cover' />
+              <img src={users?.photo?? NoProfile} alt='UserImage' className='w-14 h-14 rounded-full object-cover' />
               <TextInput
   styles='w-full rounded-full py-5'
   placeholder='Whats on your mind...'

@@ -25,7 +25,7 @@ const Story = ({ posts }) => {
         {posts?.map((post, index) => (
           <div key={index} className="flex flex-col items-center">
             <div className="w-20 h-20 overflow-hidden rounded-full border-4 border-[#1877F2]">
-              <img src={post?.userId?.profileUrl ?? NoProfile} alt="Profile" className="w-full h-full object-cover" />
+              <img src={post?.userId?.photo ?? NoProfile} alt="Profile" className="w-full h-full object-cover" />
             </div>
             <p className="mt-2 text-xs text-center">{post?.userId?.firstName}</p>
           </div>

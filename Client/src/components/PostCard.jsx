@@ -63,7 +63,7 @@ const CommentForm=({user,postId,replayAt,getComments})=>{
   }
   return  (<form className='w-full border-b border-[#66666645] '  onSubmit={handleSubmit(onSubmit)}>
   <div className='w-full flex items-center gap-2 py-4'>
-    <img src={user?.profileUrl?? NoProfile} alt='UserImage' className='w-10 h-10 rounded-full object-cover' />
+    <img src={user?.photo?? NoProfile} alt='UserImage' className='w-10 h-10 rounded-full object-cover' />
     <TextInput  name='comment' styles="w-full rounded-full py-3" placeholder={replayAt?`Replay @${replayAt}`:"Comment this Post"}
     register={register('comment',{
       required:"Comment can not  be empty",
@@ -90,7 +90,7 @@ const ReplayCard = ({reply,user,handleLike}) => {
     <div className='w-full py-3 '>
         <div className='flex gap-3 items-center mb-1'>
             <Link to={`/profile/${reply?.userId?._id}`}>
-                <img src={reply?.userId?.profileUrl ??NoProfile} alt={reply?.userId?.firstName} className='w-10 h-10 rounded-full object-cover' />
+                <img src={reply?.userId?.photo ??NoProfile} alt={reply?.userId?.firstName} className='w-10 h-10 rounded-full object-cover' />
             </Link>
             <div>
                 <Link to={`/profile/${reply?.userId?._id}`}>
@@ -140,7 +140,7 @@ const handleLike =async(uri)=>{
     <div className='mb-2 bg-primary p-4 rounded-xl'>
         <div className='flex gap-3 items-center mb-2'>
             <Link to={`/profile/${post?.userId?._id}`}>
-                <img src={post?.userId?.profileUrl??NoProfile} alt={post?.userId?.firstName} className='w-14 h-14 object-cover rounded-full' />
+                <img src={post?.userId?.photo??NoProfile} alt={post?.userId?.firstName} className='w-14 h-14 object-cover rounded-full' />
             </Link>
             <div className='w-full flex justify-between'>
               <div className=''>
@@ -200,7 +200,7 @@ const handleLike =async(uri)=>{
                 <div className='w-full py-2' key={c._id}>
                   <div className='flex gap-2 items-center mb-1'>
                     <Link to={`/profile/${c?.userId}._id`}>
-                      <img src={c?.userId?.profileUrl??NoProfile} alt={c?.userId?.firstName} className='w-10 h-10 rounded-full object-cover' />
+                      <img src={c?.userId?.photo??NoProfile} alt={c?.userId?.firstName} className='w-10 h-10 rounded-full object-cover' />
                     </Link>
                   <div>
                     <Link to={`/profile/${c?.userId?._id}`}>

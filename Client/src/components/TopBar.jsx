@@ -11,6 +11,7 @@ import Logout from '../ReduX/userSlice'
 import {setTheme} from '../ReduX/theme'
 import { Data } from '../App';
 import axios from 'axios'
+import { FaFacebookMessenger } from 'react-icons/fa';
 const TopBar = () => {
     const {setPosts}=useContext(Data)
     const Navigation=useNavigate()
@@ -24,7 +25,6 @@ const TopBar = () => {
     }
     const handleTheme=()=>{
         const themeValue= theme==='light'?'dark':'light'
-        console.log(themeValue);
         dispath(setTheme(themeValue))
     }
     const logOut=()=>{
@@ -53,7 +53,7 @@ const TopBar = () => {
             {theme==="light"?<BsMoon onClick={()=>handleTheme()}/>:<BsSunFill onClick={()=>handleTheme()}/>}
         </button>
         <div className='hidden lg:flex'>
-            <IoMdNotificationsOutline  />
+        <FaFacebookMessenger />
         </div>
         <div>
             <CustomeButton onClick={()=>logOut()}
