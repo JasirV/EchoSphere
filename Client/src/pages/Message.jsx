@@ -57,7 +57,7 @@ const Message = () => {
               </div>
               <div className="mt-6">
               {Search?.map((i)=>(
-          <div className="w-full h-16 flex justify-around items-center mt-1 hover:bg-red-300 "  onClick={()=>setMsgUser()}>
+          <div className="w-full h-16 flex justify-around items-center mt-1 hover:bg-red-300 "  onClick={()=>setMsgUser(i?._id)}>
             <img className="w-14 h-14 rounded-full" src={i.photo||NoProfile} alt="" />
             <p className="text-ascent-1 text-lg text-white ">{i.firstName}</p>
             <div
@@ -70,7 +70,7 @@ const Message = () => {
         </div>
         <div className="w-2/3 ">
           <div style={{ height: "80vh" }}>
-            <MessageUser />
+            <MessageUser msg={msgUser}/>
             <div></div>
           </div>
           <div className="h-20 border-ascent-2 flex justify-between items-center rounded-full overflow-hidden mx-2 ">

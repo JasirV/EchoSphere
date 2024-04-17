@@ -1,7 +1,7 @@
 import React from 'react'
 import NoProfile from "../assets/ProfilePng.png";
-const MessageUser = () => {
-  
+const MessageUser = ({msg}) => {
+  console.log(msg);
   return (
     <div className='w-full '>
         <div className='bg-primary flex'>
