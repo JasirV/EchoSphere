@@ -5,6 +5,7 @@ const userRouter = require('./Routes/userRoutes');
 const postRouter = require('./Routes/postRoutes');
 const cors = require('cors');
 const ChatRoute = require('./Routes/ChatRoute');
+const MessaageRouter = require('./Routes/MessageRoute');
 const app = express();
 app.use(cors());
 app.use(express.json());
@@ -13,4 +14,5 @@ app.use('/', userRouter);
 app.use("/user",Router);
 app.use('/post',postRouter); 
 app.use('/chat',ChatRoute)
+app.use('/message',MessaageRouter)
 module.exports = app;
