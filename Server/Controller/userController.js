@@ -148,24 +148,29 @@ const loginUser=async (req,res)=>{
 
 const profilesetion = async (req, res) => {
     const  userId  = req.params.id; 
-    if(!userId){
-        return res.status(404).json({
-            status:"fail",
-            message:"Need For User"
-        })    
-    }
-    const user= await UserSchema.findOne({_id:userId}).populate({path:'friends'})
-    if(!user){
-        return res.status(404).json({
-            status:'fail',
-            message:'User Not Found The User Datas'
+    try {
+        if(!userId){
+            return res.status(404).json({
+                status:"fail",
+                message:"Need For User"
+            })    
+        }
+        const user= await UserSchema.findOne({_id:userId}).populate({path:'friends'})
+        if(!user){
+            return res.status(404).json({
+                status:'fail',
+                message:'User Not Found The User Datas'
+            })
+        }
+        res.status(200).json({
+            status:"success",
+            message:"successfully fecth the user",
+            data:user
         })
+    } catch (error) {
+        console.log(error);
     }
-    res.status(200).json({
-        status:"success",
-        message:"successfully fecth the user",
-        data:user
-    })
+    
 }
 
 const getUser=async (req,res)=>{
