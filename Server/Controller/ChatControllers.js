@@ -1,4 +1,4 @@
-const ChatSchema =require('../Models/ChatModel')
+const ChatSchema =require('../Models/Message')
 
 const createChat=async (req,res)=>{
     const newChat=new ChatSchema({

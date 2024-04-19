@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import NoProfile from "../assets/ProfilePng.png";
 import axios from 'axios';
+import '../assets/messageUser.css'
 const MessageUser = ({ chat, currentUser, setSendMessage,  receivedMessage,messages,setMessages }) => {
   useEffect(() => {
     const fetchMessages = async () => {
@@ -14,24 +15,24 @@ const MessageUser = ({ chat, currentUser, setSendMessage,  receivedMessage,messa
 
     if (chat !== null) fetchMessages();
   }, [chat]);
-
+console.log(messages);
   
   return (
     <>
-    <div className="rounded-lg grid grid-rows-chatLayout">
+    <div className="ChatBox-container rounded-lg grid grid-rows-chatLayout">
       {chat ? (
         <>
           {/* chat-header */}
-          <div className=" px-4 pt-4">
-            <div className=" flex items-center">
+          <div className="chat-header px-4 pt-4">
+            <div className="follower flex items-center">
               <img
                 src={
                   chat?.photo
                 }
                 alt="Profile"
-                className=" w-12 h-12 rounded-full"
+                className="followerImage w-12 h-12 rounded-full"
               />
-              <div className="text-sm mx-3">
+              <div className="name text-sm mx-3">
                 <span>{chat?.firstName} {chat?.lastName}</span>
               </div>
             </div>
@@ -39,13 +40,13 @@ const MessageUser = ({ chat, currentUser, setSendMessage,  receivedMessage,messa
           </div>
 
           {/* chat-body */}
-          <div className=" flex flex-col gap-2 p-6 overflow-y-auto">
+          <div className="chat-body ">
             {messages?.map((message, index) => (
               <div
                 key={index}
-                className={`message ${message.senderId === currentUser ? 'own' : ''}  text-white px-4 py-3 rounded-lg max-w-72`}
+                className={`message ${message.senderId === currentUser ? 'message own' : 'message'}  text-white px-4 py-3 rounded-lg max-w-72`}
               >
-                <span>{message.text}</span>
+                <span>{message.text} hai</span>
                 <span className="text-xs text-textColor self-end"></span>
               </div>
             ))}

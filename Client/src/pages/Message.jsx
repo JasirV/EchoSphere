@@ -23,14 +23,13 @@ const Message = () => {
     const id =localStorage.getItem('user')
     const handleChange=(e)=>{
       setnewMessage(e.target.value)
-      console.log(e);
     }
     const handleSend=async(e)=>{
       e.preventDefault();
       const message={
         senderId:id,
         text:newMessage,
-        chat:currentChat._id
+        chatId:currentChat._id
       }
       console.log(message,'message');
       try {
@@ -58,7 +57,7 @@ const Message = () => {
         socket.current.on('get-users',(users)=>{
           setOnlineUsers(users)
         })
-      },[user])
+      },[])
 
   const [showModal, setShowModal] = useState(false);
   const Search= user?.friends.filter((u)=>{
@@ -179,10 +178,11 @@ const Message = () => {
               </>
             </div>
             <div className="w-4/5">
-              <TextInput
-                styles="w-full rounded-full py-5 "
+              <input
                 placeholder="Whats on your mind..."
-                name="Type "
+                name="Type"
+                type="text"
+                className="w-full rounded-full py-5 p-7"
                 onChange={handleChange}
               />
             </div>
