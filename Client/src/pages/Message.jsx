@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import TopBarProfilwe from "../components/TopBarProfilwe";
 import NoProfile from "../assets/ProfilePng.png";
 import MessageUser from "../components/MessageUser";
@@ -7,23 +7,58 @@ import { TiAttachmentOutline } from "react-icons/ti";
 import { BsFillSendFill } from "react-icons/bs";
 import axios from "axios";
 import { FaSearch } from "react-icons/fa";
+import {io} from 'socket.io-client'
+
 const Message = () => {
+  const [currentChat, setCurrentChat] = useState(null);
+  const [sendMessage, setSendMessage] = useState(null);
+  const [onlineUsers,setOnlineUsers]=useState()
+  const [receivedMessage, setReceivedMessage] = useState(null);
+  const [messages,SetMessages]=useState([])
+  const socket =useRef()
     const [user,setusers]=useState()
     const [search ,setSearch]=useState("")
     const [msgUser,setMsgUser]=useState()
+    const [newMessage,setnewMessage]=useState()
     const id =localStorage.getItem('user')
+    const handleChange=(e)=>{
+      setnewMessage(e.target.value)
+      console.log(e);
+    }
+    const handleSend=async(e)=>{
+      e.preventDefault();
+      const message={
+        senderId:id,
+        text:newMessage,
+        chat:currentChat._id
+      }
+      console.log(message,'message');
+      try {
+        const {data}=await axios.post('http://localhost:3001/message/',{message});
+        SetMessages([...messages,data])
+        setnewMessage('')
+        
+      } catch (error) {
+        console.log(error);
+      }
+    }
     const getUsers=async()=>{
         const userId=id
         try {
           const response = await axios.get(`http://localhost:3001/profilesection/${userId}`);
-          setusers(response.data.data) 
+          setusers(response?.data?.data) 
         } catch (error) {
           console.error('Error fetching data:', error);
         }
       }
       useEffect(()=>{
         getUsers()
-      },[])
+        socket.current=io("http://localhost:3002")
+        socket.current.emit('new-user-add',id)
+        socket.current.on('get-users',(users)=>{
+          setOnlineUsers(users)
+        })
+      },[user])
 
   const [showModal, setShowModal] = useState(false);
   const Search= user?.friends.filter((u)=>{
@@ -35,7 +70,6 @@ const Message = () => {
         return ""
     }
   })
-  console.log(Search);
   return (
     <>
       <TopBarProfilwe />
@@ -57,7 +91,7 @@ const Message = () => {
               </div>
               <div className="mt-6">
               {Search?.map((i)=>(
-          <div className="w-full h-16 flex justify-around items-center mt-1 hover:bg-red-300 "  onClick={()=>setMsgUser(i?._id)}>
+          <div  className="w-full h-16 flex justify-around items-center mt-1 hover:bg-red-300 "  onClick={()=>{setCurrentChat(i)}}>
             <img className="w-14 h-14 rounded-full" src={i.photo||NoProfile} alt="" />
             <p className="text-ascent-1 text-lg text-white ">{i.firstName}</p>
             <div
@@ -70,7 +104,12 @@ const Message = () => {
         </div>
         <div className="w-2/3 ">
           <div style={{ height: "80vh" }}>
-            <MessageUser msg={msgUser}/>
+            <MessageUser chat={currentChat}
+          currentUser={id}
+          setSendMessage={setSendMessage}
+          receivedMessage={receivedMessage}
+          messages={messages}
+          setMessages={SetMessages}/>
             <div></div>
           </div>
           <div className="h-20 border-ascent-2 flex justify-between items-center rounded-full overflow-hidden mx-2 ">
@@ -144,10 +183,11 @@ const Message = () => {
                 styles="w-full rounded-full py-5 "
                 placeholder="Whats on your mind..."
                 name="Type "
+                onChange={handleChange}
               />
             </div>
             <div className="w-24 h-14 mx-5 rounded-3xl bg-[#D9D9D9] flex justify-center items-center">
-              <BsFillSendFill size={22} />
+              <BsFillSendFill size={22} onClick={handleSend} />
             </div>
           </div>
         </div>

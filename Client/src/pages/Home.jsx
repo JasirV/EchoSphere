@@ -47,7 +47,8 @@ const Home = () => {
     try {
       const a= await handleFileUpload(file)
       const uri=file&&a
-      const newData=uri ?{...data,image:uri}:data;
+      const userId=id;
+      const newData=uri ?{...data,image:uri,userId}:data;
       const response = await axios.post('http://localhost:3001/post/createPost',newData);
       if(response?.status==='fail'){
         setErrMsg(response);

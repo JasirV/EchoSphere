@@ -1,7 +1,7 @@
 const ChatSchema=require('../Models/Message')
 
 const addMessage=async (req,res)=>{
-    const {senderId,text,reciver}=req.body
+    const {senderId,text,chatId,}=req.body
     const message=new ChatSchema({
         chatId,senderId,text,
     });
@@ -21,7 +21,7 @@ const getMessages=async (req,res)=>{
         const result=await ChatSchema.find({chatId});
         res.status(200).json(result)
     } catch (error) {
-        res.status(500).json(error)
+        res.status(500).json(error) 
     }
 
 

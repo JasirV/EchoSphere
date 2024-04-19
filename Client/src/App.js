@@ -18,6 +18,12 @@ export const Axios = axios.create({
     Authorization: localStorage.getItem("token"),
   },
 });
+// const API = axios.create({ baseURL: 'http://localhost:3001' });
+
+// export const getMessages = (id) => API.get(`/message/${id}`);
+
+// export const addMessage = (data) => API.post('/message/', data);
+
 export const Data = createContext();
 function Layout() {
   const { user } = useSelector((state) => state.user);

@@ -122,7 +122,7 @@ function finderdind(){
           />
           <CustomeButton
             type="Message"
-            onClick={() => navigate(`/message/${id}`)}
+            onClick={() => navigate(`/message`)}
             titile="Message"
             containerStyle="bg-[#FFFFFF] text-black py-1 px-4 rounded-full font-semibold text-l mx-1 "
           />

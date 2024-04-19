@@ -288,7 +288,7 @@ const getRequeset = async (req, res) => {
         });
       }
 };
-
+  
 const acceptRequest=async(req,res)=>{
 const {rid,status,id}=req.body
 const requestEx=await FriendSchema.findById(rid);
