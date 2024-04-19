@@ -165,8 +165,8 @@ const handleLike =async(uri)=>{
         </div>
         <div className='mt-4 flex justify-between item-center px-3 py-2 text-ascent-2 text-base border-t border-[#66666645]'>
           <p className='flex gap-2 item-center text-base cursor-pointer'
-          onClick={()=>handleLike('/post/like/'+post._id)}>
-            {post?.likes?.includes(user)?(
+          onClick={()=>handleLike('/post/like/'+post?._id)}>
+            {post?.likes?.includes(user?._id)?(
               <BiSolidLike size={20} color='blue' />
             ):(
               <BiLike size={20} />
@@ -176,7 +176,7 @@ const handleLike =async(uri)=>{
           <p className='flex gap-2 item-center text-base cursor-pointer' onClick={()=>{setShowComments(showComments ===post._id?null:post._id);
           getComments(post?._id)}}>
             <BiComment size={20} />
-            {post?.comments?.length}Comments
+            {post?.comment?.length}Comments
           </p>
           {
             user?._id===post?.userId?._id && 

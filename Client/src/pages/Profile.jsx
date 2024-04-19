@@ -13,8 +13,6 @@ import axios from "axios";
 import NoProfile from "../assets/ProfilePng.png";
 import NoCover from "../assets/cover.jpg";
 const Profile = () => {
-  // const {posts} =useSelector((state)=>state.posts);
-  // const [shortImg, setShortImg] = useState([]);
   const { value } = useContext(Data);
   const navigate = useNavigate();
   const { id } = useParams();

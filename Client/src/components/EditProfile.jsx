@@ -6,8 +6,10 @@ import TextInput from './TextInput';
 import Loading from './Loading';
 import CustomeButton from './CustomeButton';
 import { updateProfile } from '../ReduX/userSlice';
+import { useNavigate } from 'react-router-dom';
 
 const EditProfile = () => {
+    const navigaion=useNavigate()
     const {user} =useSelector((state)=>state.user)
     const dispatch=useDispatch();
     const [errMsg,setErrMsg]=useState('')
@@ -24,6 +26,7 @@ const EditProfile = () => {
     const onSubmit =async (data)=>{}
     const handleClose =()=>{
         dispatch(updateProfile(false))
+        
     }
     const handleSelect =(e)=>{
         setImage(e.target.files[0])

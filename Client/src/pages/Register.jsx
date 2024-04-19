@@ -16,7 +16,6 @@ const Register = () => {
   const navigation=useNavigate()
   const [errMsg, setErrMsg] = useState("")
   const [submit, setSubmit] = useState(false)
-  const dispatch = useDispatch()
 
   const {
     register, handleSubmit,
@@ -43,7 +42,6 @@ setErrMsg(res)
     setErrMsg(res);
     
     setInterval(()=>{
-      // window.location.replace("/login")
       navigation("/verificationCheck")
     },3000)
    

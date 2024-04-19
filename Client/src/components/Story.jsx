@@ -15,7 +15,6 @@ const Story = ({ posts }) => {
       }
     }
   };
-
   return (
     <div className="flex items-center">
       <button onClick={() => handleScroll('left')} className="px-2 py-1 bg-gray-200 rounded-full hover:bg-gray-300 focus:outline-none focus:bg-gray-300">

@@ -111,7 +111,7 @@ const Message = () => {
           setMessages={SetMessages}/>
             <div></div>
           </div>
-          <div className="h-20 border-ascent-2 flex justify-between items-center rounded-full overflow-hidden mx-2 ">
+          {currentChat?(<div className="h-20 border-ascent-2 flex justify-between items-center rounded-full overflow-hidden mx-2 ">
             <div className="w-24 h-14 mx-5 rounded-3xl bg-[#D9D9D9] flex justify-center items-center">
               <>
                 <button
@@ -189,7 +189,7 @@ const Message = () => {
             <div className="w-24 h-14 mx-5 rounded-3xl bg-[#D9D9D9] flex justify-center items-center">
               <BsFillSendFill size={22} onClick={handleSend} />
             </div>
-          </div>
+          </div>):""}
         </div>
       </div>
     </>

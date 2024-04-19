@@ -14,9 +14,7 @@ const MessageUser = ({ chat, currentUser, setSendMessage,  receivedMessage,messa
     };
 
     if (chat !== null) fetchMessages();
-  }, [chat]);
-console.log(messages);
-  
+  }, []);
   return (
     <>
     <div className="ChatBox-container rounded-lg grid grid-rows-chatLayout">

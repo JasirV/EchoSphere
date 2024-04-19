@@ -53,7 +53,7 @@ const TopBar = () => {
             {theme==="light"?<BsMoon onClick={()=>handleTheme()}/>:<BsSunFill onClick={()=>handleTheme()}/>}
         </button>
         <div className='hidden lg:flex'>
-        <FaFacebookMessenger />
+        <FaFacebookMessenger  onClick={()=>{Navigation('/message')}}/>
         </div>
         <div>
             <CustomeButton onClick={()=>logOut()}

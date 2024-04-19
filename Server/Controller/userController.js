@@ -304,7 +304,7 @@ const newRequest=await FriendSchema.findByIdAndUpdate(
     );
 
     if(status === "Accepted"){
-        const user = await UserSchema.findById("660d0b974a92f72987399432");
+        const user = await UserSchema.findById(id);
         user.friends.push(newRequest?.requestFrom); 
         await user.save();
         const friend=await UserSchema.findById(newRequest?.requestFrom);
@@ -349,11 +349,11 @@ const suggestedFriends = async (req, res) => {
     
         const suggestFriends = await UserSchema.find(queryObject)
             .limit(15)
-            .select('firstName lastName profileUrl profession');
-    
-        res.status(200).json({
+            .select('firstName lastName photo profession friends');
+            const sug=suggestFriends.filter((i)=>i._id!=id)
+            res.status(200).json({
             status: 'success',
-            data: suggestFriends,
+            data: sug,
         });
     } catch (error) {
         console.error('Error finding suggested friends:', error);
@@ -631,7 +631,7 @@ const getFriendsacc=async (req,res)=>{
         const user = await UserSchema.findById(userId)
         .populate({
             path: 'friends',
-            select: 'firstName lastName profileUrl profession'
+            select: 'firstName lastName photo profession'
         });
         res.status(200).json({
             status:'success',

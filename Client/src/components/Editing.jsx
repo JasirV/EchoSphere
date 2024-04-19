@@ -7,9 +7,11 @@ import Loading from './Loading';
 import { handleFileUpload } from '../utils';
 import axios from 'axios';
 import { UserLogin } from '../ReduX/userSlice';
+import { useNavigate } from 'react-router-dom';
 
 const Editing = () => {
   const userId=localStorage.getItem('user')
+  const navigaion=useNavigate()
   const dispatch=useDispatch()
   const [errMsg,setErrMsg]=useState('')
   const [isSubmitting,setIsSubmitting]=useState(false)
@@ -36,6 +38,7 @@ const Editing = () => {
         setErrMsg(res)
         // const newUser={token:res?.token,...res?.user}
         // dispatch(UserLogin(newUser))
+        navigaion('/home')
         localStorage.removeItem("token")
         localStorage.setItem({"token":res.token})
         
