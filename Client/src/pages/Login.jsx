@@ -19,6 +19,14 @@ const Login = () => {
   }=useForm({
     mode:"onChange"
   })
+  useEffect(()=>{
+    const token=localStorage.getItem('token')
+    if(token){
+      navigation('/home')
+    }else{
+      navigation('/login')
+    }
+  })
   const onSubmit=async (data)=>{
     setSubmit(true);
     try {

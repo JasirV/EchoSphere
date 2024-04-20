@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import React, { useEffect, useState } from 'react'
+import { Link, Navigate, useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { useForm } from 'react-hook-form'
 import { BsShare } from "react-icons/bs";
@@ -16,7 +16,14 @@ const Register = () => {
   const navigation=useNavigate()
   const [errMsg, setErrMsg] = useState("")
   const [submit, setSubmit] = useState(false)
-
+  const token=localStorage.getItem('token')
+  useEffect(()=>{
+    if(token){
+      navigation('/home')
+    }else{
+      navigation('/')
+    }
+  })
   const {
     register, handleSubmit,
     getValues,

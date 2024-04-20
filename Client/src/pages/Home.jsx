@@ -4,7 +4,7 @@ import TopBar from "../components/TopBar";
 import ProfileCard from "../components/ProfileCard";
 import FriendsCard from "../components/FriendsCard";
 import { requests, user } from "../components/data";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import NoProfile from "../assets/ProfilePng.png";
 import CustomeButton from "../components/CustomeButton";
 import { BsFiletypeGif, BsPersonFillAdd, BsPostcard } from "react-icons/bs";
@@ -22,7 +22,19 @@ import { handleFileUpload } from "../utils";
 
 const Home = () => {
   const id = localStorage.getItem("user");
+  const navigate = useNavigate()
+ 
+
   const token = localStorage.getItem("token");
+useEffect(()=>{
+  if(token){
+    return navigate('/home')
+  }else{
+    navigate('/')
+  }
+},[])
+
+
   const user = localStorage.getItem("user");
   const [users, setusers] = useState();
   const [errMsg, setErrMsg] = useState("");
@@ -117,7 +129,6 @@ const Home = () => {
     } catch (error) {}
   };
   const handleFriendRequest = async (val, requestTo) => {
-    console.log(val, "its id for requseter");
     try {
       const res = await sendFriendRequest(val, requestTo);
       const value = suggestion.filter((i) => i._id != requestTo);

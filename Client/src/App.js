@@ -10,6 +10,7 @@ import VerificationCheck from "./components/VerificationCheck";
 import { createContext, useState } from "react";
 import Editing from "./components/Editing";
 import Message from "./pages/Message";
+import RongRoutes from "./pages/RongRoutes";
 const token = localStorage.getItem("token");
 export const Axios = axios.create({
   baseURL: "http://localhost:3001/",
@@ -50,6 +51,7 @@ function App() {
           <Route path="/verificationCheck" element={<VerificationCheck />} />
           <Route path="/ProfileEditing" element={<Editing />} />
           <Route path="/message" element={<Message/>}/>
+          <Route path="*" element={<RongRoutes/>}/>
         </Routes>
       </Data.Provider>
     </div>

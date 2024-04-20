@@ -5,7 +5,6 @@ import axios from 'axios';
 
 
 const FriendsCard = ({data}) => {
-  console.log(data);
     const [user,setuser]=useState()
     const userId=localStorage.getItem('user')
     useEffect(() => {

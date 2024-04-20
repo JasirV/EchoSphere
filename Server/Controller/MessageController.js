@@ -12,17 +12,21 @@ const addMessage=async (req,res)=>{
     } catch (error) {
         res.status(500).json(error)
     }
-}
+} 
 
 const getMessages=async (req,res)=>{
-    const {chatId}=req.params;
+    const chatId=req.params.chatId;
+    console.log(chatId);
     try {
-        const result=await ChatSchema.find({chatId});
+        const result=await ChatSchema.find({$or: [
+            { senderId: chatId },
+            { chatId: chatId } 
+          ]});
         res.status(200).json(result)
     } catch (error) {
         res.status(500).json(error) 
-    }
-
+    } 
+  
 
 }
 
