@@ -136,10 +136,11 @@ const handleLike =async(uri)=>{
   await likePost(uri)
   await getComments(post?._id)
 }
+
   return (
     <div className='mb-2 bg-primary p-4 rounded-xl'>
         <div className='flex gap-3 items-center mb-2'>
-            <Link to={`/profile/${post?.userId?._id}`}>
+            <Link>
                 <img src={post?.userId?.photo??NoProfile} alt={post?.userId?.firstName} className='w-14 h-14 object-cover rounded-full' />
             </Link>
             <div className='w-full flex justify-between'>

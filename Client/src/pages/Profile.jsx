@@ -14,47 +14,49 @@ import NoProfile from "../assets/ProfilePng.png";
 import NoCover from "../assets/cover.jpg";
 const Profile = () => {
   const { value } = useContext(Data);
-  const navigate = useNavigate();
   const { id } = useParams();
-  const [user,setUser]=useState()
-const [find,setFind]=useState(false)
-
-const token = localStorage.getItem("token");
-useEffect(()=>{
-  if(token){
-    return navigate('/profile/:id')
-  }else{
-    navigate('/')
-  }
-},[])
-
-function finderdind(){
-  const userId=localStorage.getItem('user')
-  if(userId===id){
-    setFind(true)
-  }
-}
-
-
-  const fetchData = async () => {
-    try {
-      const userId = id;
-      const res = await axios.get(
-        `http://localhost:3001/profilesection/${userId}`
-      );
-      setUser(res?.data?.data);
-      // const img=user.friends.map((i)=> i.photo)
-      // setShortImg(img)
-    } catch (error) {
-      console.log(error);
+  const [find,setFind]=useState(null)
+    const navigate = useNavigate();
+    const [user, setUser] = useState(null);
+    const [isCurrentUser, setIsCurrentUser] = useState(false);
+  
+    useEffect(() => {
+      const fetchData = async () => {
+        try {
+          const response = await axios.get(`http://localhost:3001/profilesection/${id}`);
+          setUser(response.data.data);
+        } catch (error) {
+          console.error("Error fetching user data:", error);
+        }
+      };
+  
+      const checkCurrentUser = () => {
+        const userId = localStorage.getItem("user");
+        setIsCurrentUser(userId === id);
+      };
+  
+      fetchData();
+      checkCurrentUser();
+    }, [id]);
+  
+    const handleSendMessage = async (receiverId) => {
+      try {
+        const data = {
+          senderId: localStorage.getItem("user"),
+          receiverId,
+        };
+        const res = await axios.post("http://localhost:3001/chat/", data);
+        if(res.status===200){
+          navigate("/message");
+        }
+      } catch (error) {
+        console.error("Error sending message:", error);
+      }
+    };
+  
+    if (!user) {
+      return <p>Loading...</p>;
     }
-  };
-  useEffect(() => {
-    fetchData();
-    finderdind()
-
-  }, []);
-  console.log(user);
   return (
     <>
       <TopBarProfilwe user={user} />
@@ -81,7 +83,7 @@ function finderdind(){
           <div className="flex items-center justify-center lg:justify-start" >
             <div className="text-center lg:text-left">
               <p className="text-2xl text-ascent-1">{user?.firstName}{user?.lastName}</p>
-              <p className="text-ascent-2">{user?.friends.length||0} Friends</p>
+              <p className="text-ascent-2">{user?.friends?.length||0} Friends</p>
               <div className="flex mt-2">
                 {/* Displaying shortImg array items  */}
                 {/* {shortImg?.map((index, i) => (
@@ -129,7 +131,7 @@ function finderdind(){
           />
           <CustomeButton
             type="Message"
-            onClick={() => navigate(`/message`)}
+            onClick={() => handleSendMessage(user?._id)}
             titile="Message"
             containerStyle="bg-[#FFFFFF] text-black py-1 px-4 rounded-full font-semibold text-l mx-1 "
           />

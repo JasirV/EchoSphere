@@ -46,7 +46,7 @@ ChatBox-container {
 
 
 .chat-sender {
-  background:rgba( 0, 0, 255,.3);
+  background-color:rgba(6, 90, 216,.7);
   height: 4.5rem;
   position: static;
 }
@@ -57,6 +57,9 @@ ChatBox-container {
   border: none;
   outline: none;
   font-size: 14px;
+}
+.hovereffect:hover{
+  background-color:rgba(6, 29, 58, .34) ;
 }
 
 

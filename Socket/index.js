@@ -10,11 +10,11 @@ const addUser = (userId, socketId) => {
   if (!users.some((user) => user.userId === userId)) {
     console.log(users);
     users.push({ userId, socketId });
-    io.emit('getUsers', users); 
+    io.emit('getUsers', users);  
   }
 };
 
-const removeUser = (socketId) => {
+const removeUser = (socketId) => { 
   users = users.filter((user) => user.socketId !== socketId);
 };
 
@@ -22,7 +22,7 @@ const getUser = async (userId) => {
   return users.find((user) => user.userId === userId);
 };
 
-io.on('connection', (socket) => {
+io.on('connection', (socket) => { 
   console.log('a user connected.');
 
   socket.on('addUser', (userId) => {
@@ -31,11 +31,10 @@ io.on('connection', (socket) => {
   });
 
   socket.on('sendMessage', async ({ senderId, receiverId, text }) => {
-    console.log(receiverId);
-    const user = await getUser(receiverId);
-    console.log(user); 
-      io.to(user.socketId).emit('getMessage', {
-        senderId,
+    const user = await getUser(senderId);
+    console.log(user);
+      io.to(user.socketId).emit('getMessage', { 
+        senderId, 
         text,
       });
   });

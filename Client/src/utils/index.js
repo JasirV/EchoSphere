@@ -3,7 +3,7 @@ import axios from 'axios';
  
 export const handleFileUpload = async (uploadFile) => {
     try {
-        const formData = new FormData();
+        const formData = new FormData(); 
         formData.append('file', uploadFile);
         formData.append('upload_preset', 'socialmedia');
         const response = await axios.post(

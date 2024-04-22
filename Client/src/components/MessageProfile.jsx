@@ -1,8 +1,7 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import NoProfile from "../assets/ProfilePng.png";
-
-
+import '../assets/messageUser.css'
 const MessageProfile = ({conversation}) => {
   const id =localStorage.getItem('user')
   const [user,setusers]=useState()
@@ -19,9 +18,13 @@ useEffect(()=>{
 getUsers()
 },[])
   return (
-    <div>
+    <div className='flex justify-around items-center w-full hovereffect'>
        <img className="w-14 h-14 rounded-full" src={user?.photo||NoProfile} alt="" />
             <p className="text-ascent-1 text-lg text-white ">{user?.firstName}</p>
+            <div
+              className="rounded-full w-4 h-4 "
+              style={{ backgroundColor: "orange" }}
+            ></div>
     </div>
   )
 }

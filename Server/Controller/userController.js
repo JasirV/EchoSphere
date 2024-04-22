@@ -686,12 +686,11 @@ const usergetpost = async (req, res) => {
 
 const messageUsers= async (req,res)=>{
   const userId=req.body.firendsId;
-  console.log(); 
   try { 
     if(!userId){
       return res.status(404).json({status:'fail',message:'users Id Not Found'})
     }
-    const result =await UserSchema.find({userId})
+    const result =await UserSchema.findOne({_id:userId})
     if(!result){
       return res.status(404).json({
         status:'fail',

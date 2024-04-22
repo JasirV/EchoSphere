@@ -5,15 +5,27 @@ import '../assets/messageUser.css'
 import { TiAttachmentOutline } from "react-icons/ti";
 import { BsFillSendFill } from "react-icons/bs";
 import {io} from "socket.io-client"
- 
-
-const MessageUser = ({ chat, currentUser,messages,setMessages ,currentChat,conversation,setConversation}) => {
+const MessageUser = ({ chat, currentUser ,currentChat,conversation,setConversation}) => {
   const [arrivalmessage,setArrivalMessage]=useState(null)
+  const [messages,setMessages]=useState([])
   const[messagess,setMessagess]=useState([])
   const [showModal, setShowModal] = useState(false);
   const [newMessage,setnewMessage]=useState()
   const [onlineUsers,setOnlineUsers]=useState()
   const id =localStorage.getItem('user')
+  const [user,setusers]=useState()
+  const firendsId = currentChat?.members?.find(m => m !== id);
+  const getUsers=async()=>{
+    try {
+      const response = await axios.post(`http://localhost:3001/messageUser`,{firendsId});
+      setusers(response?.data?.data) 
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  }
+useEffect(()=>{
+getUsers()
+},[firendsId])
   const socket = useRef();
   const handleChange=(e)=>{
     setnewMessage(e.target.value)
@@ -29,7 +41,7 @@ const MessageUser = ({ chat, currentUser,messages,setMessages ,currentChat,conve
   const receiverId = currentChat.members?.find(member=> member !==id)
   console.log(receiverId,chat?._id,'caht');
     socket.current.emit("sendMessage",{
-      senderId: chat?._id,
+      sender: id,
       receiverId,
       text: newMessage,
     })
@@ -70,7 +82,7 @@ const MessageUser = ({ chat, currentUser,messages,setMessages ,currentChat,conve
   useEffect(() => {
     const fetchMessages = async () => {
       try {
-        const  data  = await axios.get(`http://localhost:3001/message/${chat?._id}`);
+        const  data  = await axios.get(`http://localhost:3001/message/${id}`);
         setMessages(data?.data);
       } catch (error) {
         console.log(error);
@@ -84,6 +96,7 @@ const MessageUser = ({ chat, currentUser,messages,setMessages ,currentChat,conve
   useEffect(()=>{
     socket.current = io("http://localhost:3002");
     socket.current.on("getMessage", data =>{
+      console.log(data,'getmessage');
       setArrivalMessage({
         sender: data.senderId,
         text: data.text,
@@ -93,20 +106,19 @@ const MessageUser = ({ chat, currentUser,messages,setMessages ,currentChat,conve
   },[])
 
   useEffect(() => {
-    console.log(currentChat,'thi');
     if (arrivalmessage && currentChat?.members.includes(arrivalmessage.sender)) {
       setMessages((prevMessages) => [...prevMessages, arrivalmessage]);
     }else{
-      console.log('novalu');
+      console.log('faile');
     }
   }, [arrivalmessage, currentChat]);
    useEffect(()=>{
-    socket.current.emit("addUser",id);
+    socket.current.emit("addUser",id);//revice id
     socket.current.on("getUsers",users=>{
       setOnlineUsers(users)
     })
   },[id]);
-
+  console.log(messages,'message');
   return (
     <>
     <div className="ChatBox-container rounded-lg grid grid-rows-chatLayout">
@@ -117,13 +129,13 @@ const MessageUser = ({ chat, currentUser,messages,setMessages ,currentChat,conve
             <div className="follower flex items-center">
               <img
                 src={
-                  chat?.photo
+                  user?.photo||NoProfile
                 }
                 alt="Profile"
                 className="followerImage w-12 h-12 rounded-full"
               />
               <div className="name text-sm mx-3">
-                <span>{chat?.firstName} {chat?.lastName}</span>
+                <span>{user?.firstName} {user?.lastName}</span>
               </div>
             </div>
             <hr className="w-11/12 border-gray-300 mt-4 mx-auto" />
