@@ -6,7 +6,9 @@ import axios from "axios";
 import { FaSearch } from "react-icons/fa";
 import {io} from 'socket.io-client'
 import { useNavigate } from "react-router-dom";
+
 import MessageProfile from "../components/MessageProfile";
+
 
 const Message = () => {
   const [conversation,setConversation]=useState([{
@@ -47,9 +49,21 @@ const Message = () => {
           console.error('Error fetching data:', error);
         }
       }
+
 useEffect(()=>{
 getUsers()
 },[])
+
+      useEffect(()=>{
+        getUsers()
+        socket.current=io("http://localhost:3002")
+        socket.current.emit('new-user-add',id)
+        socket.current.on('get-users',(users)=>{
+          setOnlineUsers(users)
+        })
+      },[])
+
+  
   const Search= user?.friends.filter((u)=>{
     if(search===""){
         return u

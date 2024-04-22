@@ -93,7 +93,7 @@ const MessageUser = ({ chat, currentUser,messages,setMessages ,currentChat,conve
   },[])
 
   useEffect(() => {
-    console.log(currentChat,'this');
+    console.log(currentChat,'thi');
     if (arrivalmessage && currentChat?.members.includes(arrivalmessage.sender)) {
       setMessages((prevMessages) => [...prevMessages, arrivalmessage]);
     }else{

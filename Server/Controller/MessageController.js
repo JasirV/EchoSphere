@@ -30,3 +30,30 @@ const getMessages = async (req, res) => {
 };
 
 module.exports = { addMessage, getMessages };
+
+    try {
+        const result=await message.save()
+        res.status(200).json(result)
+    } catch (error) {
+        res.status(500).json(error)
+    }
+} 
+
+const getMessages=async (req,res)=>{
+    const chatId=req.params.chatId;
+    console.log(chatId);
+    try {
+        const result=await ChatSchema.find({$or: [
+            { senderId: chatId },
+            { chatId: chatId } 
+          ]});
+        res.status(200).json(result)
+    } catch (error) {
+        res.status(500).json(error) 
+    } 
+  
+
+}
+
+module.exports={addMessage,getMessages}
+
