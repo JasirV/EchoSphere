@@ -8,7 +8,7 @@ userRouter.post('/register',userController.register)
 .get('/profilesection/:id',userController.profilesetion)
 .get('/getFriendsacc/:id',userController.getFriendsacc)
 .get('/usergetpost/:id',userController.usergetpost)
-//user Update and get user 
+//user Update and get user  
 .post('/getUser/:id?',userController.getUser)
 .put('/updateUser',userController.updateUser) 
 
@@ -26,6 +26,10 @@ userRouter.post('/register',userController.register)
  //suggestedFriends
 
  .post ('/suggestFriends',userController.suggestedFriends)
+
+ //messageFriends
+
+ .post('/messageUser',userController.messageUsers)
 
 
 module.exports=userRouter

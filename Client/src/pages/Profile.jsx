@@ -17,8 +17,16 @@ const Profile = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const [user,setUser]=useState()
-  console.log(id);
 const [find,setFind]=useState(false)
+
+const token = localStorage.getItem("token");
+useEffect(()=>{
+  if(token){
+    return navigate('/profile/:id')
+  }else{
+    navigate('/')
+  }
+},[])
 
 function finderdind(){
   const userId=localStorage.getItem('user')
@@ -46,9 +54,10 @@ function finderdind(){
     finderdind()
 
   }, []);
+  console.log(user);
   return (
     <>
-      <TopBarProfilwe user={user?.photo} />
+      <TopBarProfilwe user={user} />
       <div className="home px-4 lg:px-10 pb-20 2xl:px-40 bg-bgColor lg:rounded-lg align-center flex justify-center flex-col">
         {/* Cover Photo */}
         <img

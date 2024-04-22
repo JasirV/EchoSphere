@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-
+ 
 export const handleFileUpload = async (uploadFile) => {
     try {
         const formData = new FormData();

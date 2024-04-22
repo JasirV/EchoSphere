@@ -2,15 +2,31 @@ import React, { useEffect, useRef, useState } from "react";
 import TopBarProfilwe from "../components/TopBarProfilwe";
 import NoProfile from "../assets/ProfilePng.png";
 import MessageUser from "../components/MessageUser";
-import TextInput from "../components/TextInput";
-import { TiAttachmentOutline } from "react-icons/ti";
-import { BsFillSendFill } from "react-icons/bs";
 import axios from "axios";
 import { FaSearch } from "react-icons/fa";
 import {io} from 'socket.io-client'
+import { useNavigate } from "react-router-dom";
+import MessageProfile from "../components/MessageProfile";
 
 const Message = () => {
+  const [conversation,setConversation]=useState([{
+    "_id": {
+      "$oid": "662638cf8d95b3e7c6b3f9f6"
+    },
+    "members": [
+      "66229f707d40407b9c99fda6",
+      "66229e3c7d40407b9c99fd88"
+    ],
+    "createdAt": {
+      "$date": "2024-04-22T10:15:43.999Z"
+    },
+    "updatedAt": {
+      "$date": "2024-04-22T10:15:43.999Z"
+    },
+    "__v": 0
+  }])
   const [currentChat, setCurrentChat] = useState(null);
+  const [chats,setChats]=useState()
   const [sendMessage, setSendMessage] = useState(null);
   const [onlineUsers,setOnlineUsers]=useState()
   const [receivedMessage, setReceivedMessage] = useState(null);
@@ -19,28 +35,9 @@ const Message = () => {
     const [user,setusers]=useState()
     const [search ,setSearch]=useState("")
     const [msgUser,setMsgUser]=useState()
-    const [newMessage,setnewMessage]=useState()
     const id =localStorage.getItem('user')
-    const handleChange=(e)=>{
-      setnewMessage(e.target.value)
-    }
-    const handleSend=async(e)=>{
-      e.preventDefault();
-      const message={
-        senderId:id,
-        text:newMessage,
-        chatId:currentChat._id
-      }
-      console.log(message,'message');
-      try {
-        const {data}=await axios.post('http://localhost:3001/message/',{message});
-        SetMessages([...messages,data])
-        setnewMessage('')
-        
-      } catch (error) {
-        console.log(error);
-      }
-    }
+    const navigate= useNavigate()
+
     const getUsers=async()=>{
         const userId=id
         try {
@@ -50,16 +47,9 @@ const Message = () => {
           console.error('Error fetching data:', error);
         }
       }
-      useEffect(()=>{
-        getUsers()
-        socket.current=io("http://localhost:3002")
-        socket.current.emit('new-user-add',id)
-        socket.current.on('get-users',(users)=>{
-          setOnlineUsers(users)
-        })
-      },[])
-
-  const [showModal, setShowModal] = useState(false);
+useEffect(()=>{
+getUsers()
+},[])
   const Search= user?.friends.filter((u)=>{
     if(search===""){
         return u
@@ -69,13 +59,22 @@ const Message = () => {
         return ""
     }
   })
+  const token = localStorage.getItem("token");
+  useEffect(()=>{
+    if(token){
+      return navigate('/message')
+    }else{
+      navigate('/')
+    }
+  },[])
+  
   return (
     <>
       <TopBarProfilwe />
       <div className="w-full flex overflow-hidden" >
         <div
           className="w-1/3 bg-[#065AD8]"
-          style={{  height: "91vh" }}
+          style={{ height: "91vh" }}
         >
           <div className="w-full flex justify-start mt-3 mx-4 items-center">
           <input
@@ -89,10 +88,9 @@ const Message = () => {
               </div>
               </div>
               <div className="mt-6">
-              {Search?.map((i)=>(
+              {conversation?.map((i)=>(
           <div  className="w-full h-16 flex justify-around items-center mt-1 hover:bg-red-300 "  onClick={()=>{setCurrentChat(i)}}>
-            <img className="w-14 h-14 rounded-full" src={i.photo||NoProfile} alt="" />
-            <p className="text-ascent-1 text-lg text-white ">{i.firstName}</p>
+           <MessageProfile conversation={i}/>
             <div
               className="rounded-full w-4 h-4"
               style={{ backgroundColor: "orange" }}
@@ -106,90 +104,13 @@ const Message = () => {
             <MessageUser chat={currentChat}
           currentUser={id}
           setSendMessage={setSendMessage}
-          receivedMessage={receivedMessage}
           messages={messages}
-          setMessages={SetMessages}/>
+          setMessages={SetMessages}
+          currentChat={currentChat}
+          conversation={conversation}
+          setConversation={setConversation}/>
             <div></div>
           </div>
-          {currentChat?(<div className="h-20 border-ascent-2 flex justify-between items-center rounded-full overflow-hidden mx-2 ">
-            <div className="w-24 h-14 mx-5 rounded-3xl bg-[#D9D9D9] flex justify-center items-center">
-              <>
-                <button
-                  className=""
-                  type="button"
-                  onClick={() => setShowModal(true)}
-                >
-                  <TiAttachmentOutline size={25} />
-                </button>
-                {showModal ? (
-                  <>
-                    <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
-                      <div className="relative w-auto my-6 mx-auto max-w-3xl">
-                        {/*content*/}
-                        <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
-                          {/*header*/}
-                          <div className="flex items-start justify-between p-5 border-b border-solid border-blueGray-200 rounded-t">
-                            <h3 className="text-3xl font-semibold">
-                              Something Rong
-                            </h3>
-                            <button
-                              className="p-1 ml-auto bg-transparent border-0 text-black opacity-5 float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
-                              onClick={() => setShowModal(false)}
-                            >
-                              <span className="bg-transparent text-black opacity-5 h-6 w-6 text-2xl block outline-none focus:outline-none">
-                                ×
-                              </span>
-                            </button>
-                          </div>
-                          {/*body*/}
-                          <div className="relative p-6 flex-auto">
-                            <p className="my-4 text-blueGray-500 text-lg leading-relaxed">
-                              Currently, we are testing certain functionalities,
-                              and unfortunately, the processing is temporarily
-                              unavailable. This is part of our testing phase to
-                              ensure optimal performance and reliability. We
-                              appreciate your patience as our technical team
-                              works to resolve this issue
-                            </p>
-                          </div>
-                          {/*footer*/}
-                          <div className="flex items-center justify-end p-6 border-t border-solid border-blueGray-200 rounded-b">
-                            <button
-                              className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-                              type="button"
-                              onClick={() => setShowModal(false)}
-                            >
-                              Close
-                            </button>
-                            <button
-                              className="bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-                              type="button"
-                              onClick={() => setShowModal(false)}
-                            >
-                              Save Changes
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
-                  </>
-                ) : null}
-              </>
-            </div>
-            <div className="w-4/5">
-              <input
-                placeholder="Whats on your mind..."
-                name="Type"
-                type="text"
-                className="w-full rounded-full py-5 p-7"
-                onChange={handleChange}
-              />
-            </div>
-            <div className="w-24 h-14 mx-5 rounded-3xl bg-[#D9D9D9] flex justify-center items-center">
-              <BsFillSendFill size={22} onClick={handleSend} />
-            </div>
-          </div>):""}
         </div>
       </div>
     </>
