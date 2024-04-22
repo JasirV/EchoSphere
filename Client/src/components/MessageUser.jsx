@@ -16,7 +16,7 @@ const MessageUser = ({ chat, currentUser ,currentChat,conversation,setConversati
   const [user,setusers]=useState()
   const firendsId = currentChat?.members?.find(m => m !== id);
   const getUsers=async()=>{
-    try {
+    try { 
       const response = await axios.post(`http://localhost:3001/messageUser`,{firendsId});
       setusers(response?.data?.data) 
     } catch (error) {
@@ -33,13 +33,15 @@ getUsers()
   const handleSend = async(e)=>{
     e.preventDefault();
     const message = {
-      sender : chat?._id,
+      sender : id,
       text : newMessage,
       conversationId : currentChat?._id,
     };
     
   const receiverId = currentChat.members?.find(member=> member !==id)
-  console.log(receiverId,chat?._id,'caht');
+  console.log(receiverId,'revicerId');
+  console.log(id,'this user Id'); 
+  console.log(currentChat?.member,'this currentChat mebers Id'); 
     socket.current.emit("sendMessage",{
       sender: id,
       receiverId,
@@ -94,16 +96,16 @@ getUsers()
   }, [chat]);
 
   useEffect(()=>{
-    socket.current = io("http://localhost:3002");
-    socket.current.on("getMessage", data =>{
-      console.log(data,'getmessage');
+    socket.current = io("http://localhost:3002/");
+    socket.current.on("getMessage", (data) => {
       setArrivalMessage({
-        sender: data.senderId,
+        sender: data.sender,
         text: data.text,
         createdAt: Date.now(),
-      })
-    })
-  },[])
+      });
+    })});
+  
+  console.log(arrivalmessage,'arra');
 
   useEffect(() => {
     if (arrivalmessage && currentChat?.members.includes(arrivalmessage.sender)) {
@@ -112,13 +114,13 @@ getUsers()
       console.log('faile');
     }
   }, [arrivalmessage, currentChat]);
+  const receiverId = currentChat?.members?.find(member=> member !==id)
    useEffect(()=>{
-    socket.current.emit("addUser",id);//revice id
+    socket.current.emit("addUser",receiverId);//revice id
     socket.current.on("getUsers",users=>{
       setOnlineUsers(users)
     })
-  },[id]);
-  console.log(messages,'message');
+  },[receiverId]);
   return (
     <>
     <div className="ChatBox-container rounded-lg grid grid-rows-chatLayout">
@@ -228,6 +230,7 @@ getUsers()
                 type="text"
                 className="w-full rounded-full py-5 p-7"
                 onChange={handleChange}
+                value={newMessage}
               />
             </div>
             <div className="w-24 h-14 mx-5 rounded-3xl bg-[#D9D9D9] flex justify-center items-center">

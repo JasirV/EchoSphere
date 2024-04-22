@@ -2,7 +2,8 @@ const ChatSchema = require("../Models/Message");
 
 const addMessage = async (req, res) => {
   const { sender, text, conversationId } = req.body.message;
-
+  console.log( sender, text, conversationId,"np");
+  console.log(sender,'sender');
   const message = new ChatSchema({
     conversationId,
     sender,
