@@ -87,8 +87,8 @@ getUsers()
               </div>
               </div>
               <div className="mt-6">
-              {conversation?.map((i)=>(
-          <div  className="w-full h-16 flex  items-center mt-1 hover:bg-red-300 "  onClick={()=>{setCurrentChat(i)}}>
+              {conversation?.map((i,index)=>(
+          <div key={index||i._id} className="w-full h-16 flex  items-center mt-1 hover:bg-red-300 "  onClick={()=>{setCurrentChat(i)}}>
            <MessageProfile conversation={i}/>
             
           </div>

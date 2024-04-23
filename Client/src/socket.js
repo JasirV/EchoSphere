@@ -5,7 +5,7 @@ let socket;
 
 export const useSocket = () => {
   if (!socket) {
-    socket = io('http://localhost:3002');  
+    socket = io('http://localhost:3002');   
 
     socket.on('connect', () => {
       console.log('Connected to server');

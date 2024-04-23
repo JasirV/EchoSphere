@@ -1,22 +1,14 @@
-const http = require('http');
-const server = http.createServer();
-const io = require('socket.io')(server, {
+const io = require("socket.io")(3002, {
   cors: {
-    origin: 'http://localhost:3000',
+    origin: "http://localhost:3000",
   },
-});
-
-server.listen(3002, () => {
-  console.log('Socket server is running on port 3002');
 });
 
 let users = [];
 
 const addUser = (userId, socketId) => {
-  if (!users.some((user) => user.userId === userId)) {
+  !users.some((user) => user.userId === userId) &&
     users.push({ userId, socketId });
-    io.emit('getUsers', users);
-  }
 };
 
 const removeUser = (socketId) => {
@@ -27,28 +19,30 @@ const getUser = (userId) => {
   return users.find((user) => user.userId === userId);
 };
 
-io.on('connection', (socket) => {
-  console.log('A user connected.');
+io.on("connection", (socket) => {
+  //when ceonnect
+  console.log("a user connected.");
 
-  socket.on('addUser', (userId) => {
+  //take userId and socketId from user
+  socket.on("addUser", (userId) => {
     addUser(userId, socket.id);
+    io.emit("getUsers", users);
   });
 
-  socket.on('sendMessage', ({ sender, receiverId, text }) => {
+  //send and get message
+  socket.on("sendMessage", ({ sender, receiverId, text }) => {
     const user = getUser(receiverId);
-    if (user) {
-      io.to(user.socketId).emit('getMessage', {
-        sender,
-        text,
-      });
-    } else {
-      console.log('User not found for sendMessage:', receiverId);
-    }
+    console.log(user);
+    io.to(user.socketId).emit("getMessage", {
+      sender,
+      text,
+    });
   });
 
-  socket.on('disconnect', () => {
-    console.log('A user disconnected!');
+  //when disconnect
+  socket.on("disconnect", () => {
+    console.log("a user disconnected!");
     removeUser(socket.id);
-    io.emit('getUsers', users);
+    io.emit("getUsers", users);
   });
 });

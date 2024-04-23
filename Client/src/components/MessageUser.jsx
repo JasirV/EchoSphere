@@ -26,6 +26,17 @@ const MessageUser = ({ chat, currentUser ,currentChat,conversation,setConversati
 useEffect(()=>{
 getUsers()
 },[firendsId])
+  useEffect(() => {
+    const getMessages = async () => {
+      try {
+        const res = await axios.get(`http://localhost:3001/message/${currentChat?._id}`);
+        setMessages(res.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    getMessages();
+  }, [currentChat]);
   const socket = useRef();
   const handleChange=(e)=>{
     setnewMessage(e.target.value)
@@ -37,11 +48,8 @@ getUsers()
       text : newMessage,
       conversationId : currentChat?._id,
     };
-    
+     
   const receiverId = currentChat.members?.find(member=> member !==id)
-  console.log(receiverId,'revicerId');
-  console.log(id,'this user Id'); 
-  console.log(currentChat?.member,'this currentChat mebers Id'); 
     socket.current.emit("sendMessage",{
       sender: id,
       receiverId,
@@ -98,18 +106,17 @@ getUsers()
   useEffect(()=>{
     socket.current = io("http://localhost:3002/");
     socket.current.on("getMessage", (data) => {
+      console.log(data,'data');
       setArrivalMessage({
         sender: data.sender,
         text: data.text,
         createdAt: Date.now(),
       });
-    })});
-  
-  console.log(arrivalmessage,'arra');
-
+    })},[]);
   useEffect(() => {
     if (arrivalmessage && currentChat?.members.includes(arrivalmessage.sender)) {
       setMessages((prevMessages) => [...prevMessages, arrivalmessage]);
+      console.log('success');
     }else{
       console.log('faile');
     }

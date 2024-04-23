@@ -2,8 +2,6 @@ const ChatSchema = require("../Models/Message");
 
 const addMessage = async (req, res) => {
   const { sender, text, conversationId } = req.body.message;
-  console.log( sender, text, conversationId,"np");
-  console.log(sender,'sender');
   const message = new ChatSchema({
     conversationId,
     sender,
@@ -13,7 +11,6 @@ const addMessage = async (req, res) => {
   try {
     const result = await message.save();
     res.status(200).json(result);
-    console.log(result);
   } catch (error) {
     res.status(500).json(error);
   } 

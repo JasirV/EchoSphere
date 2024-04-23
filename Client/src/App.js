@@ -49,7 +49,7 @@ function App() {
 
     socket.on('getUser', (activeUsers) => {
       console.log('Received active users:', activeUsers);
-    });
+  });
 
     socket.on('disconnect', () => {
       console.log('Disconnected from server');
