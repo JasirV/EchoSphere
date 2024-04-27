@@ -46,5 +46,5 @@
       <br>Express
     </td>
 </table>
-    <a href="https://www.example.com](https://echo-sphere.vercel.app/" style="color: white; text-decoration: none;">Click here for more information</a>
+    <a href="https://echo-sphere.vercel.app/" style="color: white; text-decoration: none;">Click here for more information</a>
 
