@@ -35,7 +35,7 @@ const Register = () => {
 setSubmit(true)
 try {
   const res = await axios.post(
-    "https://echospheree.site/register",
+    "https://api.echospheree.site/register",
     data,
     {
       headers: {
