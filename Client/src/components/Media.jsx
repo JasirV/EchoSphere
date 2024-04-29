@@ -4,7 +4,7 @@ const Media = ({userId}) => {
     const [post,setPost]=useState()
     const fetchpost =async ()=>{
         try {
-            const res=await axios.get(`http://localhost:3001/usergetpost/${userId}`)
+            const res=await axios.get(`https://echospheree.site/usergetpost/${userId}`)
             setPost(res.data.data)
         } catch (error) {
             console.log(error)

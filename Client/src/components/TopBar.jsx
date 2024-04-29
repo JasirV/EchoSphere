@@ -20,7 +20,7 @@ const TopBar = () => {
     const dispath=useDispatch();
     const{register,handleSubmit,formState:{errors}}=useForm()
     const handleSearch=async (data)=>{
-            const res=await axios.post('http://localhost:3001/post',{data})
+            const res=await axios.post('https://echospheree.site/post',{data})
             setPosts(res.data.data);
     }
     const handleTheme=()=>{

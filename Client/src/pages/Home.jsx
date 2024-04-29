@@ -65,7 +65,7 @@ useEffect(()=>{
       const userId = id;
       const newData = uri ? { ...data, image: uri, userId } : data;
       const response = await axios.post(
-        "http://localhost:3001/post/createPost",
+        "https://echospheree.site/post/createPost",
         newData
       );
       if (response?.status === "fail") {
@@ -85,14 +85,14 @@ useEffect(()=>{
     }
   };
   const fetchPost = async () => {
-    const res = await axios.post("http://localhost:3001/post", { token }, {});
+    const res = await axios.post("https://echospheree.site/post", { token }, {});
     setPosts(res.data.data);
     setloading(false);
   };
   const handleLikePost = async (uri) => {
     const userId = id;
     try {
-      const res = await axios.post(`http://localhost:3001${uri}`, { userId });
+      const res = await axios.post(`https://echospheree.site/${uri}`, { userId });
       fetchPost();
     } catch (error) {
       console.log(error);
@@ -100,7 +100,7 @@ useEffect(()=>{
   };
   const handleDelete = async (va) => {
     try {
-      const res = await axios.delete(`http://localhost:3001/post/${va}`, {
+      const res = await axios.delete(`https://echospheree.site/post/${va}`, {
         id,
       });
       fetchPost();
@@ -111,7 +111,7 @@ useEffect(()=>{
   const fetchFriendRequests = async () => {
     try {
       const userId = id;
-      const res = await axios.post(`http://localhost:3001/getRequeset/`, {
+      const res = await axios.post(`https://echospheree.site/getRequeset/`, {
         userId,
       });
       setFriendRequest(res.data.data);
@@ -121,7 +121,7 @@ useEffect(()=>{
   };
   const fetchSuggestedFriends = async () => {
     try {
-      const res = await axios.post(`http://localhost:3001/suggestFriends`, {
+      const res = await axios.post(`https://echospheree.site/suggestFriends`, {
         id,
       });
       setSuggestion(res.data.data);
@@ -145,7 +145,7 @@ useEffect(()=>{
     };
     console.log(id);
     try {
-      const res = await axios.post("http://localhost:3001/acceptRequest", data);
+      const res = await axios.post("https://echospheree.site/acceptRequest", data);
       fetchFriendRequests();
     } catch (error) {
       console.log(error);
@@ -154,7 +154,7 @@ useEffect(()=>{
   const sendFriendRequest = async (val, requestTo) => {
     const data = { val, requestTo };
     try {
-      const res = await axios.post("http://localhost:3001/friendRequest", {
+      const res = await axios.post("https://echospheree.site/friendRequest", {
         data,
       });
       await fetchSuggestedFriends();
@@ -166,7 +166,7 @@ useEffect(()=>{
     const userId = id;
     try {
       const response = await axios.get(
-        `http://localhost:3001/profilesection/${userId}`
+        `https://echospheree.site/profilesection/${userId}`
       );
       setusers(response.data.data);
     } catch (error) {

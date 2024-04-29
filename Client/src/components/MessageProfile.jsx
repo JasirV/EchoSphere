@@ -8,7 +8,7 @@ const MessageProfile = ({conversation}) => {
   const firendsId = conversation.members?.find(m => m !== id);
   const getUsers=async()=>{
     try {
-      const response = await axios.post(`http://localhost:3001/messageUser`,{firendsId});
+      const response = await axios.post(`https://echospheree.site/messageUser`,{firendsId});
       setusers(response?.data?.data) 
     } catch (error) {
       console.error('Error fetching data:', error);

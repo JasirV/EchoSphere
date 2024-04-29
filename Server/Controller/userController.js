@@ -20,7 +20,6 @@ const register = async (req, res) => {
   const { firstName, lastName, email, password, userName } = req.body;
 
   //Validation
-
   if (!firstName || !lastName || !email || !password) {
     return res.status(400).json({
       status: "fail",
@@ -224,13 +223,11 @@ const updateUser = async (req, res) => {
     new: true,
   });
   await user.populate({ path: "friends" });
-  const token = tokengenerator(user?._id);
   user.password = undefined;
   res.status(200).json({
     status: "success",
     message: "User Update Successfully",
     user,
-    token,
   });
 };
 

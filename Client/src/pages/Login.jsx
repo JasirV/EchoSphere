@@ -30,7 +30,7 @@ const Login = () => {
   const onSubmit=async (data)=>{
     setSubmit(true);
     try {
-      const res= await axios.post('http://localhost:3001/login',data)
+      const res= await axios.post('https://echospheree.site/login',data)
       localStorage.setItem("token",res.data.token)
       localStorage.setItem("user",res.data.data._id)
       
