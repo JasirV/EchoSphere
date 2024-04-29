@@ -22,18 +22,16 @@ import { handleFileUpload } from "../utils";
 
 const Home = () => {
   const id = localStorage.getItem("user");
-  const navigate = useNavigate()
- 
+  const navigate = useNavigate();
 
   const token = localStorage.getItem("token");
-useEffect(()=>{
-  if(token){
-    return navigate('/home')
-  }else{
-    navigate('/')
-  }
-},[])
-
+  useEffect(() => {
+    if (token) {
+      return navigate("/home");
+    } else {
+      navigate("/");
+    }
+  }, []);
 
   const user = localStorage.getItem("user");
   const [users, setusers] = useState();
@@ -85,14 +83,20 @@ useEffect(()=>{
     }
   };
   const fetchPost = async () => {
-    const res = await axios.post("https://echospheree.site/post", { token }, {});
+    const res = await axios.post(
+      "https://echospheree.site/post",
+      { token },
+      {}
+    );
     setPosts(res.data.data);
     setloading(false);
   };
   const handleLikePost = async (uri) => {
     const userId = id;
     try {
-      const res = await axios.post(`https://echospheree.site/${uri}`, { userId });
+      const res = await axios.post(`https://echospheree.site/${uri}`, {
+        userId,
+      });
       fetchPost();
     } catch (error) {
       console.log(error);
@@ -145,7 +149,10 @@ useEffect(()=>{
     };
     console.log(id);
     try {
-      const res = await axios.post("https://echospheree.site/acceptRequest", data);
+      const res = await axios.post(
+        "https://echospheree.site/acceptRequest",
+        data
+      );
       fetchFriendRequests();
     } catch (error) {
       console.log(error);
@@ -188,7 +195,7 @@ useEffect(()=>{
           {/* LIFT */}
           <div className="hidden w-1/3 lg:w-1/4 h-full md:flex flex-col gap-6 overflow-y-auto">
             <ProfileCard user={users} />
-            <FriendsCard data={'hai'}/>
+            <FriendsCard data={"hai"} />
           </div>
           {/* CENTER */}
           <div className="flex-1 h-full  px-4 flex flex-col gap-6 overflow-y-auto rounded-lg">
