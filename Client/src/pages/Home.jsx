@@ -56,12 +56,12 @@ const Home = () => {
   const handlePostSubmit = async (data) => {
     setPosting(true);
     setErrMsg("");
-    console.log(data, "data");
     try {
       const a = await handleFileUpload(file);
       const uri = file && a;
       const userId = id;
       const newData = uri ? { ...data, image: uri, userId } : data;
+      console.log(newData,'newData');
       const response = await axios.post(
         "https://www.api.echospheree.site/post/createPost",
         newData
@@ -86,7 +86,6 @@ const Home = () => {
     const res = await axios.post(
       "https://www.api.echospheree.site/post",
       { token },
-      {}
     );
     setPosts(res.data.data);
     setloading(false);
@@ -115,7 +114,7 @@ const Home = () => {
   const fetchFriendRequests = async () => {
     try {
       const userId = id;
-      const res = await axios.post(`https://www.api.echospheree.site/getRequeset/`, {
+      const res = await axios.post(`https://www.api.echospheree.site/getRequeset`, {
         userId,
       });
       setFriendRequest(res.data.data);
