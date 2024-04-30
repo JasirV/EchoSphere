@@ -2,6 +2,7 @@ import React from 'react'
 import { useNavigate } from 'react-router-dom'
 
 const VerificationCheck = () => {
+  const navigation=useNavigate()
   setInterval(()=>{
     navigation("/login")
   },5000)
