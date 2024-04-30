@@ -13,7 +13,7 @@ import axios from 'axios'
 
 const getPostComments=async(id) =>{
 try {
-  const res=await axios.get(`https://echospheree.site/post/comments/${id}`)
+  const res=await axios.get(`https://www.api.echospheree.site/post/comments/${id}`)
   return res?.data?.data
 } catch (error) {
   console.log(error);
@@ -43,7 +43,7 @@ const CommentForm=({user,postId,replayAt,getComments})=>{
       replayAt:replayAt,};
       console.log(newData);
       console.log(URL);
-      const res=await axios.post(`https://echospheree.site/${URL}`,{newData})
+      const res=await axios.post(`https://www.api.echospheree.site/${URL}`,{newData})
       console.log(res);
       if(res?.status=='fail'){
         setErrMsg(res)

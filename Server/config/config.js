@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const connect = async () => {
   await mongoose
-    .connect("mongodb://127.0.0.1:27017/FaceBook")
+    .connect("mongodb+srv://fixeca4451:x9UkVvB3aZznXZYW@cluster0.laedogl.mongodb.net/")
     .then((conn) => {
       console.log("Connection success");
     })

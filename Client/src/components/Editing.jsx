@@ -30,7 +30,7 @@ const Editing = () => {
       const uritwo=coverPic&&b
       const {firstName,lastName,location,profession}=data;
       const newData={firstName,lastName,location,profession,photo:uri,coverPhoto:uritwo,userId}
-      const res=await axios.put('https://echospheree.site/updateUser',{newData})
+      const res=await axios.put('https://www.api.echospheree.site/updateUser',{newData})
       console.log(res);
       if(res?.status==='fail'){
         setErrMsg(res)

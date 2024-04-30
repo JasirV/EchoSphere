@@ -63,7 +63,7 @@ const Home = () => {
       const userId = id;
       const newData = uri ? { ...data, image: uri, userId } : data;
       const response = await axios.post(
-        "https://echospheree.site/post/createPost",
+        "https://www.api.echospheree.site/post/createPost",
         newData
       );
       if (response?.status === "fail") {
@@ -84,7 +84,7 @@ const Home = () => {
   };
   const fetchPost = async () => {
     const res = await axios.post(
-      "https://echospheree.site/post",
+      "https://www.api.echospheree.site/post",
       { token },
       {}
     );
@@ -94,7 +94,7 @@ const Home = () => {
   const handleLikePost = async (uri) => {
     const userId = id;
     try {
-      const res = await axios.post(`https://echospheree.site/${uri}`, {
+      const res = await axios.post(`https://www.api.echospheree.site/${uri}`, {
         userId,
       });
       fetchPost();
@@ -104,7 +104,7 @@ const Home = () => {
   };
   const handleDelete = async (va) => {
     try {
-      const res = await axios.delete(`https://echospheree.site/post/${va}`, {
+      const res = await axios.delete(`https://www.api.echospheree.site/post/${va}`, {
         id,
       });
       fetchPost();
@@ -115,7 +115,7 @@ const Home = () => {
   const fetchFriendRequests = async () => {
     try {
       const userId = id;
-      const res = await axios.post(`https://echospheree.site/getRequeset/`, {
+      const res = await axios.post(`https://www.api.echospheree.site/getRequeset/`, {
         userId,
       });
       setFriendRequest(res.data.data);
@@ -125,7 +125,7 @@ const Home = () => {
   };
   const fetchSuggestedFriends = async () => {
     try {
-      const res = await axios.post(`https://echospheree.site/suggestFriends`, {
+      const res = await axios.post(`https://www.api.echospheree.site/suggestFriends`, {
         id,
       });
       setSuggestion(res.data.data);
@@ -150,7 +150,7 @@ const Home = () => {
     console.log(id);
     try {
       const res = await axios.post(
-        "https://echospheree.site/acceptRequest",
+        "https://www.api.echospheree.site/acceptRequest",
         data
       );
       fetchFriendRequests();
@@ -161,7 +161,7 @@ const Home = () => {
   const sendFriendRequest = async (val, requestTo) => {
     const data = { val, requestTo };
     try {
-      const res = await axios.post("https://echospheree.site/friendRequest", {
+      const res = await axios.post("https://www.api.echospheree.site/friendRequest", {
         data,
       });
       await fetchSuggestedFriends();
@@ -173,7 +173,7 @@ const Home = () => {
     const userId = id;
     try {
       const response = await axios.get(
-        `https://api.echospheree.site/profilesection/${userId}`
+        `https://www.api.api.echospheree.site/profilesection/${userId}`
       );
       setusers(response.data.data);
     } catch (error) {

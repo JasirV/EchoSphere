@@ -23,7 +23,7 @@ const register = async (req, res) => {
   if (!firstName || !lastName || !email || !password) {
     return res.status(400).json({
       status: "fail",
-      message: "fil The Form Complele",
+      message: "fil The Form Complete",
     });
   }
   try {

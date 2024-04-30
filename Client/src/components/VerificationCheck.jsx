@@ -2,6 +2,9 @@ import React from 'react'
 import { useNavigate } from 'react-router-dom'
 
 const VerificationCheck = () => {
+  setInterval(()=>{
+    navigation("/login")
+  },5000)
   return (
     <div style={{ backgroundColor: '#007bff', minHeight: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
     <div style={{ backgroundColor: '#ffffff', padding: '50px', borderRadius: '10px', boxShadow: '0px 0px 10px rgba(0,0,0,0.1)' }}>

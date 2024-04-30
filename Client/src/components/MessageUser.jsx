@@ -17,7 +17,7 @@ const MessageUser = ({ chat, currentUser ,currentChat,conversation,setConversati
   const firendsId = currentChat?.members?.find(m => m !== id);
   const getUsers=async()=>{
     try { 
-      const response = await axios.post(`https://echospheree.site/messageUser`,{firendsId});
+      const response = await axios.post(`https://www.api.echospheree.site/messageUser`,{firendsId});
       setusers(response?.data?.data) 
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -29,7 +29,7 @@ getUsers()
   useEffect(() => {
     const getMessages = async () => {
       try {
-        const res = await axios.get(`https://echospheree.site/message/${currentChat?._id}`);
+        const res = await axios.get(`https://www.api.echospheree.site/message/${currentChat?._id}`);
         setMessages(res.data);
       } catch (err) {
         console.log(err);
@@ -56,7 +56,7 @@ getUsers()
       text: newMessage,
     })
     try {
-      const data=await axios.post('https://echospheree.site/message',{message});
+      const data=await axios.post('https://www.api.echospheree.site/message',{message});
       setMessages([...messages,data?.data])
       setnewMessage("")
       
@@ -67,7 +67,7 @@ getUsers()
   useEffect(()=>{
     const getConversaton = async ()=>{
       try{
-       const res = await axios.get(`https://echospheree.site/chat/${id}`)
+       const res = await axios.get(`https://www.api.echospheree.site/chat/${id}`)
        setConversation(res.data)
       }catch(error){
       console.log(error);
@@ -92,7 +92,7 @@ getUsers()
   useEffect(() => {
     const fetchMessages = async () => {
       try {
-        const  data  = await axios.get(`https://echospheree.site/message/${id}`);
+        const  data  = await axios.get(`https://www.api.echospheree.site/message/${id}`);
         setMessages(data?.data);
       } catch (error) {
         console.log(error);

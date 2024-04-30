@@ -13,7 +13,7 @@ const TopBarProfilwe = () => {
     const userId = id;
     try {
       const response = await axios.get(
-        `https://echospheree.site/profilesection/${userId}`
+        `https://www.api.echospheree.site/profilesection/${userId}`
       );
       setUser(response.data.data);
     } catch (error) {
