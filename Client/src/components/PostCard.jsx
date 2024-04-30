@@ -133,7 +133,7 @@ const handleLike =async(uri)=>{
   await likePost(uri)
   await getComments(post?._id)
 }
-const follow=user?.friends.includes(localStorage.getItem('user'))|| post?.userId!=localStorage.get('user')
+const follow=user?.friends.includes(localStorage.getItem('user'))|| post?.userId!=localStorage.getItem('user')
 console.log(follow,'follow');
   return (
     <div className='mb-2 bg-primary p-4 rounded-xl'>
