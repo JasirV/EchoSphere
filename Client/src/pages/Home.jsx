@@ -29,7 +29,7 @@ const Home = () => {
     if (token) {
       return navigate("/home");
     } else {
-      navigate("/");
+      navigate("/login  ");
     }
   }, []);
 
