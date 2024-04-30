@@ -78,7 +78,7 @@ function App() {
           <Route path="/verificationCheck" element={<VerificationCheck />} />
           <Route path="/ProfileEditing" element={<Editing />} />
           <Route path="/message" element={<Message/>}/>
-          <Route path="*" element={<RongRoutes/>}/>
+          {/* <Route path="*" element={<RongRoutes/>}/> */}
         </Routes>
       </Data.Provider>
     </div>

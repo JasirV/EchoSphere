@@ -34,17 +34,14 @@ const CommentForm=({user,postId,replayAt,getComments})=>{
   const onSubmit= async (data)=>{
     setLoading(true)
     setErrMsg("");
-    console.log(replayAt,"replay");
     try {
       const URL =!replayAt?"post/comment/"+postId:"post/replayComment/"+postId
       const newData={comment:data?.comment,
       from:`${user?.firstName}   ${user?.lastName}`,
       userId:user?._id,
       replayAt:replayAt,};
-      console.log(newData);
-      console.log(URL);
       const res=await axios.post(`https://www.api.echospheree.site/${URL}`,{newData})
-      console.log(res);
+      getComments()
       if(res?.status=='fail'){
         setErrMsg(res)
       }else{
@@ -136,7 +133,8 @@ const handleLike =async(uri)=>{
   await likePost(uri)
   await getComments(post?._id)
 }
-
+const follow=user.friends.includes(localStorage.getItem('user'))
+console.log(follow,'follow');
   return (
     <div className='mb-2 bg-primary p-4 rounded-xl'>
         <div className='flex gap-3 items-center mb-2'>
@@ -152,7 +150,10 @@ const handleLike =async(uri)=>{
                 </Link>
                 <span className='text-ascent-2'>{post?.userId?.lastName}</span>
               </div>
-              <span className='text-ascent-2'>{moment(post?.createAt ?? "2024-03-27").fromNow()}</span>
+              {follow?
+              <span className='text-ascent-2'>{post && moment(post.createAt).fromNow()}</span>:
+              <span className='text-ascent-1 text-blue font-semibold'>Add Friend</span>
+            }
             </div>
         </div>
         <div>
@@ -210,7 +211,7 @@ const handleLike =async(uri)=>{
                       </p>
                     </Link>
                     <span className='text-ascent-2 hidden md:flex'>
-                      {moment(c?.createAt??"2024-03-27").fromNow()}
+                    {c && moment(c?.createAt).fromNow()}
                     </span>
                   </div>
                   </div>

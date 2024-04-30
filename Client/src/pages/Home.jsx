@@ -172,7 +172,7 @@ const Home = () => {
     const userId = id;
     try {
       const response = await axios.get(
-        `https://www.api.api.echospheree.site/profilesection/${userId}`
+        `https://www.api.echospheree.site/profilesection/${userId}`
       );
       setusers(response.data.data);
     } catch (error) {

@@ -8,6 +8,7 @@ import { handleFileUpload } from '../utils';
 import axios from 'axios';
 import { UserLogin } from '../ReduX/userSlice';
 import { useNavigate } from 'react-router-dom';
+import TopBar from './TopBar';
 
 const Editing = () => {
   const userId=localStorage.getItem('user')
@@ -55,6 +56,8 @@ const Editing = () => {
     setCoverPic(e.target.files[0])
   }
   return (
+    <>
+    <TopBar/>
     <div className='w-full h-svh flex justify-center items-center bg-bgColor'>
       <div className='w-1/3 bg-primary p-2 rounded-lg'>
         <form className='w-full  p-1' onSubmit={handleSubmit(onSubmit)}>
@@ -85,6 +88,7 @@ const Editing = () => {
       </div>
 
     </div>
+    </>
   )
 }
 
