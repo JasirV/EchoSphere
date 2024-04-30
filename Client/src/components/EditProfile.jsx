@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form';
 import { MdClose } from 'react-icons/md';
 import { useDispatch, useSelector } from 'react-redux'
@@ -32,6 +32,9 @@ const EditProfile = () => {
     const handleSelect =(e)=>{
         setImage(e.target.files[0])
     }
+
+ 
+    
   return (
     <>
     <div className='flex z-50 inset-0 overflow-y-auto  items-center justify-center'>

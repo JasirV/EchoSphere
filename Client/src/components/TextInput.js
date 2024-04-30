@@ -9,7 +9,7 @@ const TextInput = React.forwardRef(({
         label&&(<p className={`text-ascent-2 text-sm mb-2 ${labelStyles}`}>{label}</p>)
       }
       <div>
-        <input type={type} name={name} placeholder={placeholder} ref={ref} className={`bg=secondary rounded border border-[#66666690] outlne-none text-sm text-ascent-1 px-4 py-3 placehilde:text-[#666] ${styles}`} {...register} aria-invalid={error?"true":"false"} />
+        <input  type={type} name={name} placeholder={placeholder} ref={ref} className={`bg=secondary rounded border border-[#66666690] outlne-none text-sm text-ascent-1 px-4 py-3 placehilde:text-[#666] ${styles}`} {...register} aria-invalid={error?"true":"false"} />
         
       </div>
       {error&&(

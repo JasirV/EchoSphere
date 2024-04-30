@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import TextInput from './TextInput'
 import CustomeButton from './CustomeButton'
 import { useDispatch } from 'react-redux'
@@ -18,6 +18,8 @@ const Editing = () => {
   const [isSubmitting,setIsSubmitting]=useState(false)
   const [picture,setPicture]=useState(null)
   const [coverPic,setCoverPic]=useState(null)
+  const [users,setUsers]=useState()
+  const id=localStorage.getItem('user')
   const {register,handleSubmit,formState:{errors},}=useForm({
     mode:'onChange',defaultValues:{...userId},
   })
@@ -55,6 +57,20 @@ const Editing = () => {
   const handleSelectTwo=(e)=>{
     setCoverPic(e.target.files[0])
   }
+  useEffect(()=>{
+    const getUsers = async () => {
+        const userId = id;
+        try {
+          const response = await axios.get(
+            `https://www.api.echospheree.site/profilesection/${userId}`
+          );
+          setUsers(response.data.data);
+        } catch (error) {
+          console.error("Error fetching data:", error);
+        }
+      };
+      getUsers()
+},[])
   return (
     <>
     <TopBar/>
@@ -62,10 +78,50 @@ const Editing = () => {
       <div className='w-1/3 bg-primary p-2 rounded-lg'>
         <form className='w-full  p-1' onSubmit={handleSubmit(onSubmit)}>
           <h1>Edit Profile</h1>
-        <TextInput  name="firstName" placeholder="First Name" label="First Name" type="text" styles='w-full rounded-full' labelStyle='ml-2' register={register("firstName",{required:'First Name Is Required!'})} error={errors.firstName?errors.firstName?.message:""} />
-        <TextInput  name="lastName" placeholder="Last Name" label="Last Name" type="text" styles='w-full rounded-full' labelStyle='ml-2' register={register("lastName",{required:'LastName do no matcch!'})} error={errors.lastName?errors.lastName?.message:""} />
-        <TextInput  name="profession" placeholder="Profession" label="Profession" type="text" styles='w-full rounded-full' labelStyle='ml-2' register={register("profession",{required:'profession Is Required!'})} error={errors.profession?errors.profession?.message:""}/>
-        <TextInput  name="location" placeholder="Location" label="Location" type="text" styles='w-full rounded-full' labelStyle='ml-2' register={register("location",{required:'location do no match'})} error={errors.location?errors.location?.message:""}/>
+          <input 
+          value={users?.firstName}
+  name="firstName" 
+  placeholder="First Name" 
+  type="text" 
+  className="w-full rounded-full" 
+  style={{ marginLeft: '2px' }} 
+  ref={register({ required: 'First Name Is Required!' })}
+/>
+{errors.firstName && <span>{errors.firstName.message}</span>}
+
+<input 
+value={users?.lastName}
+  name="lastName" 
+  placeholder="Last Name" 
+  type="text" 
+  className="w-full rounded-full" 
+  style={{ marginLeft: '2px' }} 
+  ref={register({ required: 'Last Name Is Required!' })}
+/>
+{errors.lastName && <span>{errors.lastName.message}</span>}
+
+<input 
+value={users?.profession}
+  name="profession" 
+  placeholder="Profession" 
+  type="text" 
+  className="w-full rounded-full" 
+  style={{ marginLeft: '2px' }} 
+  ref={register({ required: 'Profession Is Required!' })}
+/>
+{errors.profession && <span>{errors.profession.message}</span>}
+
+<input 
+value={users?.location}
+  name="location" 
+  placeholder="Location" 
+  type="text" 
+  className="w-full rounded-full" 
+  style={{ marginLeft: '2px' }} 
+  ref={register({ required: 'Location Is Required!' })}
+/>
+{errors.location && <span>{errors.location.message}</span>}
+
         <div className='m-2 flex flex-col'>
         <label className='mt-2' >Profile Image</label>
         <input className='mt-2' type="file" name='photo'  id='imgUpload' onChange={(e)=>handleSelect(e)} accept='.jpg,.png,.jpeg'/>
