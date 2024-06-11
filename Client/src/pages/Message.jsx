@@ -28,7 +28,7 @@ const Message = () => {
     const getUsers=async()=>{
         const userId=id
         try {
-          const response = await axios.get(`https://www.api.echospheree.site/profilesection/${userId}`);
+          const response = await axios.get(`https://echosphere-5ixt.onrender.com/profilesection/${userId}`);
           setusers(response?.data?.data) 
         } catch (error) {
           console.error('Error fetching data:', error);

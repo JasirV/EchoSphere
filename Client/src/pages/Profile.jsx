@@ -23,7 +23,7 @@ const Profile = () => {
     useEffect(() => {
       const fetchData = async () => {
         try {
-          const response = await axios.get(`https://www.api.echospheree.site/profilesection/${id}`);
+          const response = await axios.get(`https://echosphere-5ixt.onrender.com/profilesection/${id}`);
           setUser(response.data.data);
         } catch (error) {
           console.error("Error fetching user data:", error);
@@ -45,7 +45,7 @@ const Profile = () => {
           senderId: localStorage.getItem("user"),
           receiverId,
         };
-        const res = await axios.post("https://www.api.echospheree.site/chat/", data);
+        const res = await axios.post("https://echosphere-5ixt.onrender.com/chat/", data);
         if(res.status===200){
           navigate("/message");
         }

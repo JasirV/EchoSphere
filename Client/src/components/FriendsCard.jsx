@@ -10,7 +10,7 @@ const FriendsCard = ({data}) => {
     useEffect(() => {
       const fetchData = async () => {
         try {
-          const response = await axios.get(`https://www.api.echospheree.site/getFriendsacc/${userId}`);
+          const response = await axios.get(`https://echosphere-5ixt.onrender.com/getFriendsacc/${userId}`);
           setuser(response.data.data) 
         } catch (error) {
           console.error('Error fetching data:', error);
