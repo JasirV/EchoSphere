@@ -8,7 +8,6 @@ import {useForm} from 'react-hook-form'
 import TextInput from './TextInput';
 import CustomeButton from './CustomeButton'
 import Loading from './Loading'
-import { postComments, posts } from './data';
 import axios from 'axios'
 
 const getPostComments=async(id) =>{
@@ -42,7 +41,7 @@ const CommentForm=({user,postId,replayAt,getComments})=>{
       replayAt:replayAt,};
       const res=await axios.post(`https://echosphere-5ixt.onrender.com/${URL}`,{newData})
       getComments()
-      if(res?.status=='fail'){
+      if(res?.status==='fail'){
         setErrMsg(res)
       }else{
         reset({
@@ -133,7 +132,7 @@ const handleLike =async(uri)=>{
   await likePost(uri)
   await getComments(post?._id)
 }
-const follow=user?.friends.includes(localStorage.getItem('user'))|| post?.userId!=localStorage.getItem('user')
+const follow=user?.friends.includes(localStorage.getItem('user'))|| post?.userId!==localStorage.getItem('user')
 console.log(follow,'follow');
   return (
     <div className='mb-2 bg-primary p-4 rounded-xl'>
@@ -240,7 +239,7 @@ console.log(follow,'follow');
                       <p className='text-base text-ascent-1 cursor-pointer' onClick={()=>setShowReplay(showReplay === c?.replies?._id ? 0 :c?.replies?._id)}>Show Replies({c?.replies?.length})</p>
                     )}
                     {
-                      showReplay == c?.replies?._id &&
+                      showReplay === c?.replies?._id &&
                       c?.replies?.map((reply)=>(
                         <ReplayCard reply={reply} user={user} key={reply?._id} handleLike={()=>handleLike(`/posts/like-comment/${c?._id}/${reply?._id}`)} />
                       ))

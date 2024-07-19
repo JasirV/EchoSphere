@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
 import TopBarProfilwe from "../components/TopBarProfilwe";
-import BgImage from "../assets/social-media-cropped.png";
 import CustomeButton from "../components/CustomeButton";
 import NavProfile from "../components/NavProfile";
 import ProfilePost from "../components/ProfilePost";

@@ -1,21 +1,17 @@
 import React, { useContext, useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import TopBar from "../components/TopBar";
 import ProfileCard from "../components/ProfileCard";
 import FriendsCard from "../components/FriendsCard";
-import { requests, user } from "../components/data";
 import { Link, useNavigate } from "react-router-dom";
 import NoProfile from "../assets/ProfilePng.png";
 import CustomeButton from "../components/CustomeButton";
-import { BsFiletypeGif, BsPersonFillAdd, BsPostcard } from "react-icons/bs";
+import { BsFiletypeGif, BsPersonFillAdd } from "react-icons/bs";
 import { BiImages, BiSolidVideo } from "react-icons/bi";
 import TextInput from "../components/TextInput";
 import { useForm } from "react-hook-form";
 import Loading from "../components/Loading";
 import PostCard from "../components/PostCard";
 import Story from "../components/Story";
-import TopBarProfilwe from "../components/TopBarProfilwe";
-import Profile from "./Profile";
 import axios from "axios";
 import { Data } from "../App";
 import { handleFileUpload } from "../utils";
@@ -33,14 +29,13 @@ const Home = () => {
     }
   }, []);
 
-  const user = localStorage.getItem("user");
+
   const [users, setusers] = useState();
   const [errMsg, setErrMsg] = useState("");
   const [friendRequest, setFriendRequest] = useState();
   const [file, setFile] = useState(null);
   const [posting, setPosting] = useState(false);
   const [loading, setloading] = useState(false);
-  const [description, setDescription] = useState("");
   const [suggestion, setSuggestion] = useState();
   const { posts, setPosts } = useContext(Data);
   const {
@@ -134,7 +129,7 @@ const Home = () => {
   const handleFriendRequest = async (val, requestTo) => {
     try {
       const res = await sendFriendRequest(val, requestTo);
-      const value = suggestion.filter((i) => i._id != requestTo);
+      const value = suggestion.filter((i) => i._id !== requestTo);
       setSuggestion(value);
     } catch (error) {
       console.log(error);
@@ -185,6 +180,12 @@ const Home = () => {
     fetchPost();
     fetchFriendRequests();
     fetchSuggestedFriends();
+    const intervalId = setInterval(() => {
+      fetchPost();
+      console.log('API called');
+    }, 14 * 60 * 1000);
+
+    return () => clearInterval(intervalId);
   }, []);
   return (
     <>

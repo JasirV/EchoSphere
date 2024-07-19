@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import {Link, useNavigate} from 'react-router-dom'
-import {useDispatch} from 'react-redux'
 import {useForm} from 'react-hook-form'
 import { BsShare } from "react-icons/bs";
 import { CgLivePhoto } from "react-icons/cg";
@@ -51,7 +50,6 @@ setSubmit(false)
   }
   const [errMsg,setErrMsg]=useState("")
   const [submit,setSubmit]=useState(false)
-  const dispatch=useDispatch()
   return (
     <div className='bg-bgColor w-full h-screen flex items-center justify-center p-6'>
       <div className='w-full md:w-2/3 h-fit lg:h-full 2xl:h-5/6 py-8 lg:py-0 flex flex-row-reverse bg-primary rounded-xl overflow-hidden shadow-xl'>
@@ -76,7 +74,7 @@ setSubmit(false)
           <Link to ="/reset-password" className='text-sm text-right text-blue font-semibold'> Forget Password</Link>
 
           {errMsg?.message&&(
-            <span className={`text-sm ${errMsg?.status=="failed"?"text-[#f64949fe]":"text-[#2ba150fe]"}mt-0.5`}>
+            <span className={`text-sm ${errMsg?.status==="failed"?"text-[#f64949fe]":"text-[#2ba150fe]"}mt-0.5`}>
               {errMsg?.message}
             </span>
           )}

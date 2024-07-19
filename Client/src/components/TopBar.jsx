@@ -6,8 +6,6 @@ import TextInput from './TextInput';
 import CustomeButton from './CustomeButton';
 import { useForm } from 'react-hook-form';
 import {BsMoon, BsSunFill } from 'react-icons/bs';
-import {IoMdNotificationsOutline} from 'react-icons/io'
-import Logout from '../ReduX/userSlice'
 import {setTheme} from '../ReduX/theme'
 import { Data } from '../App';
 import axios from 'axios'
@@ -16,7 +14,6 @@ const TopBar = () => {
     const {setPosts}=useContext(Data)
     const Navigation=useNavigate()
     const {theme}=useSelector((state)=>state.theme)
-    const {user}=useSelector((state)=>state.user)
     const dispath=useDispatch();
     const{register,handleSubmit,formState:{errors}}=useForm()
     const handleSearch=async (data)=>{

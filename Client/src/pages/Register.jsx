@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Link, Navigate, useNavigate } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
+import { Link, useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { BsShare } from "react-icons/bs";
 import { CgLivePhoto } from "react-icons/cg";
@@ -87,7 +86,7 @@ setErrMsg(res)
               <TextInput name="password" placeholder="Password" label="Confirm Password" type="Password" register={register("cpassword", {
                 validate: (value) => {
                   const { password } = getValues();
-                  if (password != value) {
+                  if (password !== value) {
                     return "Passwords do no match"
                   }
                 }
