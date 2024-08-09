@@ -40,25 +40,25 @@ function App() {
   const { theme } = useSelector((state) => state.theme);
   const [value, setValue] = useState("post");
  
-  useEffect(() => {
-    const socket = io('http://localhost:3002'); 
+  // useEffect(() => {
+  //   const socket = io('http://localhost:3002'); 
 
-    socket.on('connection', () => {
-      console.log('Connected to server');
-    });
+  //   socket.on('connection', () => {
+  //     console.log('Connected to server');
+  //   });
 
-    socket.on('getUser', (activeUsers) => {
-      console.log('Received active users:', activeUsers);
-  });
+  //   socket.on('getUser', (activeUsers) => {
+  //     console.log('Received active users:', activeUsers);
+  // });
 
-    socket.on('disconnect', () => {
-      console.log('Disconnected from server');
-    });
+  //   socket.on('disconnect', () => {
+  //     console.log('Disconnected from server');
+  //   });
 
-    return () => {
-      socket.disconnect();
-    };
-  }, []); 
+  //   return () => {
+  //     socket.disconnect();
+  //   };
+  // }, []); 
 
   
    
