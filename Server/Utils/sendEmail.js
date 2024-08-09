@@ -20,7 +20,7 @@ const transporter = nodemailer.createTransport({
 
 const sendVerificationEmail = async (user, res, token) => {
     const { _id, email, lastName } = user;
-    const link = `${process.env.APP_URL}/user/verify/${token}`;
+    const link = `https://echosphere-5ixt.onrender.com/user/verify/${token}`;
 
     try {
         const hashToken = await hashStrting(token);
